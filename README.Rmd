@@ -25,7 +25,7 @@ Something something 'DNS. Something something 'TLS'.  Something something 'getdn
 Requires [`getdns`](https://getdnsapi.net/) to be installed and available for compilation (no guard rails setup yet):
 
 - Use `brew install getdns` on macOS
-- Install `libgetdns-dev` on debian/ubuntu
+- Install `libgetdns-dev` or `libgetdns-devel` on debian/ubuntu (version 1.5.1 or higher)
 - (Nothing to see here Windows folks stuck in a backwards ecosysem)
 
 You're going to need version 1.5.1 of `getdns` for this package to install.
