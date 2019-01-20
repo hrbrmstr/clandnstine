@@ -2,5 +2,12 @@ language: R
 sudo: false
 cache: packages
 
+before_install:
+  - sudo apt-get install -y libgetdns-dev libidn2-dev libunbound-dev
+
+addons:
+  apt:
+    update: true
+
 after_success:
-- Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::codecov()'

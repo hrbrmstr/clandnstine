@@ -23,6 +23,15 @@ available for compilation (no guard rails setup yet):
   - Install `libgetdns-dev` on debian/ubuntu
   - (Nothing to see here Windows folks stuck in a backwards ecosysem)
 
+You’re going to need version 1.5.1 of `getdns` for this package to
+install.
+
+I’ve gotten this running on macOS and Ubuntu 16.04. For the latter I had
+to ensure `libidn2-dev` and `libunbound-dev` were installed then had to
+grab the 1.5.1 tarball (e.g. `aria2c
+https://getdnsapi.net/releases/getdns-1-5-1/getdns-1.5.1.tar.gz`),
+extract it and `config`/`make`/`make install` (plus `ldconfig` after).
+
 ## TODO/WAT
 
 I finally grok the getdns api so the package api is going to change
@@ -144,9 +153,9 @@ gdns_lib_version()
 ## [1] "2604:a880:800:10::6bc:2001" "104.236.112.222"
 
 (gdns_get_address(x, "yahoo.com"))
-##  [1] "2001:4998:58:1836::11" "2001:4998:58:1836::10" "2001:4998:c:1023::5"   "2001:4998:c:1023::4"  
-##  [5] "2001:4998:44:41d::3"   "2001:4998:44:41d::4"   "98.138.219.232"        "98.138.219.231"       
-##  [9] "98.137.246.8"          "98.137.246.7"          "72.30.35.10"           "72.30.35.9"
+##  [1] "2001:4998:58:1836::10" "2001:4998:c:1023::5"   "2001:4998:44:41d::4"   "2001:4998:c:1023::4"  
+##  [5] "2001:4998:44:41d::3"   "2001:4998:58:1836::11" "98.137.246.8"          "98.137.246.7"         
+##  [9] "98.138.219.232"        "98.138.219.231"        "72.30.35.9"            "72.30.35.10"
 
 (gdns_get_address(x, "yahoo.commmm"))
 ## character(0)
@@ -159,7 +168,7 @@ str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
 ## List of 5
 ##  $ answer_type   : int 800
 ##  $ canonical_name: chr "lenovo.com."
-##  $ replies_full  : int [1, 1:600] 55 84 129 128 0 1 0 8 0 0 ...
+##  $ replies_full  : int [1, 1:600] 14 77 129 128 0 1 0 8 0 0 ...
 ##  $ replies_tree  :'data.frame':  1 obs. of  7 variables:
 ##  $ status        : int 900
 
@@ -181,9 +190,9 @@ Yep. Advertising even in DNS `TXT` records (see item number
 
 | Lang | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
 | :--- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
-| C++  |        3 | 0.25 | 240 | 0.59 |          66 | 0.50 |       61 | 0.20 |
-| R    |        8 | 0.67 | 154 | 0.38 |          20 | 0.15 |      168 | 0.54 |
-| Rmd  |        1 | 0.08 |  16 | 0.04 |          46 | 0.35 |       81 | 0.26 |
+| C++  |        3 | 0.25 | 240 | 0.59 |          66 | 0.49 |       61 | 0.19 |
+| R    |        8 | 0.67 | 154 | 0.38 |          20 | 0.15 |      171 | 0.54 |
+| Rmd  |        1 | 0.08 |  16 | 0.04 |          48 | 0.36 |       84 | 0.27 |
 
 ## Code of Conduct
 
