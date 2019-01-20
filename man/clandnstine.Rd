@@ -4,8 +4,12 @@
 \name{clandnstine}
 \alias{clandnstine}
 \alias{clandnstine-package}
-\title{...}
+\title{Perform 'DNS' over 'TLS' Queries}
 \description{
+Something something 'DNS. Something something 'TLS'.
+Something something 'getdns API/library'.
+}
+\details{
 \itemize{
 \item URL: \url{https://gitlab.com/hrbrmstr/clandnstine}
 \item BugReports: \url{https://gitlab.com/hrbrmstr/clandnstine/issues}

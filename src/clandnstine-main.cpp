@@ -59,7 +59,7 @@ CharacterVector get_address(std::string host, std::string resolver = "9.9.9.9") 
       r = getdns_list_get_dict(addrs, i, &cur_addr);
       r = getdns_dict_get_bindata(cur_addr, "address_data", &address);
 
-      if (address->size == 4 || address->size == 16) { // this is unlikely
+      if (address->size == 4 || address->size == 16) { // this is unlikely to be bad
         char *addr_str = getdns_display_ip_address(address);
         out.push_back(addr_str);
         if (addr_str) free(addr_str);

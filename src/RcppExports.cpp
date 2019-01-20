@@ -17,9 +17,69 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// check_is_xptr
+void check_is_xptr(SEXP s);
+RcppExport SEXP _clandnstine_check_is_xptr(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    check_is_xptr(s);
+    return R_NilValue;
+END_RCPP
+}
+// is_null_xptr_
+SEXP is_null_xptr_(SEXP s);
+RcppExport SEXP _clandnstine_is_null_xptr_(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_null_xptr_(s));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_resolver
+SEXP gdns_resolver(std::string resolver);
+RcppExport SEXP _clandnstine_gdns_resolver(SEXP resolverSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type resolver(resolverSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_resolver(resolver));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_get_address
+CharacterVector gdns_get_address(SEXP gctx, std::string host);
+RcppExport SEXP _clandnstine_gdns_get_address(SEXP gctxSEXP, SEXP hostSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type host(hostSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_get_address(gctx, host));
+    return rcpp_result_gen;
+END_RCPP
+}
+// int_get_resolvers
+CharacterVector int_get_resolvers(SEXP gctx);
+RcppExport SEXP _clandnstine_int_get_resolvers(SEXP gctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_get_resolvers(gctx));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_clandnstine_get_address", (DL_FUNC) &_clandnstine_get_address, 2},
+    {"_clandnstine_check_is_xptr", (DL_FUNC) &_clandnstine_check_is_xptr, 1},
+    {"_clandnstine_is_null_xptr_", (DL_FUNC) &_clandnstine_is_null_xptr_, 1},
+    {"_clandnstine_gdns_resolver", (DL_FUNC) &_clandnstine_gdns_resolver, 1},
+    {"_clandnstine_gdns_get_address", (DL_FUNC) &_clandnstine_gdns_get_address, 2},
+    {"_clandnstine_int_get_resolvers", (DL_FUNC) &_clandnstine_int_get_resolvers, 1},
     {NULL, NULL, 0}
 };
 

@@ -14,3 +14,46 @@ get_address <- function(host, resolver = "9.9.9.9") {
     .Call(`_clandnstine_get_address`, host, resolver)
 }
 
+#' Test whether an object is an external pointer
+#'
+#' @param x object to test
+check_is_xptr <- function(s) {
+    invisible(.Call(`_clandnstine_check_is_xptr`, s))
+}
+
+#' Test whether an external pointer is null
+#'
+#' @param x object to test
+is_null_xptr_ <- function(s) {
+    .Call(`_clandnstine_is_null_xptr_`, s)
+}
+
+#' Create a gdns DNS over TLS context and populate it with a resolver
+#' for use in resolution functions
+#'
+#' @param resolver length 1 <chr> of a valid DNS over TLS resolver;
+#'        Defaults to Quad9 (`9.9.9.9`).
+#' @export
+#' @examples
+#' x <- gdns_resolver()
+gdns_resolver <- function(resolver = "9.9.9.9") {
+    .Call(`_clandnstine_gdns_resolver`, resolver)
+}
+
+#' Resolve a host to an addrss
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param host to lookup
+#' @export
+#' @examples
+#' x <- gdns_resolver()
+#' gdns_get_address(x, "yahoo.com")
+#' x %>% gdns_get_address("yahoo.com")
+gdns_get_address <- function(gctx, host) {
+    .Call(`_clandnstine_gdns_get_address`, gctx, host)
+}
+
+int_get_resolvers <- function(gctx) {
+    .Call(`_clandnstine_int_get_resolvers`, gctx)
+}
+
