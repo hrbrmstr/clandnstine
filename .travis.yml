@@ -5,7 +5,7 @@ dist: xenial
 
 apt_packages:
   - libgetdns-dev
-  - libidn2-dev
+  - libidn2-0-dev
   - libunbound-dev
 
 addons:

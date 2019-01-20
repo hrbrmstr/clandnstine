@@ -10,7 +10,7 @@ Authors@R: c(
 Maintainer: Bob Rudis <bob@rud.is>
 Description: Something something 'DNS. Something something 'TLS'. 
     Something something 'getdns API/library'.
-SystemRequirements: C++11
+SystemRequirements: C++11l libgetdns v1.5.1 or higher
 URL: https://gitlab.com/hrbrmstr/clandnstine
 BugReports: https://gitlab.com/hrbrmstr/clandnstine/issues
 Encoding: UTF-8

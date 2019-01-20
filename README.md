@@ -20,15 +20,16 @@ Requires [`getdns`](https://getdnsapi.net/) to be installed and
 available for compilation (no guard rails setup yet):
 
   - Use `brew install getdns` on macOS
-  - Install `libgetdns-dev` on debian/ubuntu
+  - Install `libgetdns-dev` or `libgetdns-devel` on debian/ubuntu
+    (version 1.5.1 or higher)
   - (Nothing to see here Windows folks stuck in a backwards ecosysem)
 
 You’re going to need version 1.5.1 of `getdns` for this package to
 install.
 
 I’ve gotten this running on macOS and Ubuntu 16.04. For the latter I had
-to ensure `libidn2-dev` and `libunbound-dev` were installed then had to
-grab the 1.5.1 tarball (e.g. `aria2c
+to ensure `libidn2-0-dev` and `libunbound-dev` were installed then had
+to grab the 1.5.1 tarball (e.g. `aria2c
 https://getdnsapi.net/releases/getdns-1-5-1/getdns-1.5.1.tar.gz`),
 extract it and `config`/`make`/`make install` (plus `ldconfig` after).
 
@@ -153,9 +154,9 @@ gdns_lib_version()
 ## [1] "2604:a880:800:10::6bc:2001" "104.236.112.222"
 
 (gdns_get_address(x, "yahoo.com"))
-##  [1] "2001:4998:58:1836::10" "2001:4998:c:1023::5"   "2001:4998:44:41d::4"   "2001:4998:c:1023::4"  
-##  [5] "2001:4998:44:41d::3"   "2001:4998:58:1836::11" "98.137.246.8"          "98.137.246.7"         
-##  [9] "98.138.219.232"        "98.138.219.231"        "72.30.35.9"            "72.30.35.10"
+##  [1] "2001:4998:c:1023::5"   "2001:4998:58:1836::11" "2001:4998:44:41d::3"   "2001:4998:44:41d::4"  
+##  [5] "2001:4998:c:1023::4"   "2001:4998:58:1836::10" "98.138.219.231"        "98.138.219.232"       
+##  [9] "98.137.246.8"          "72.30.35.9"            "72.30.35.10"           "98.137.246.7"
 
 (gdns_get_address(x, "yahoo.commmm"))
 ## character(0)
@@ -168,7 +169,7 @@ str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
 ## List of 5
 ##  $ answer_type   : int 800
 ##  $ canonical_name: chr "lenovo.com."
-##  $ replies_full  : int [1, 1:600] 14 77 129 128 0 1 0 8 0 0 ...
+##  $ replies_full  : int [1, 1:600] 135 135 129 128 0 1 0 8 0 0 ...
 ##  $ replies_tree  :'data.frame':  1 obs. of  7 variables:
 ##  $ status        : int 900
 

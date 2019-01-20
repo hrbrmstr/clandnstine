@@ -30,7 +30,7 @@ Requires [`getdns`](https://getdnsapi.net/) to be installed and available for co
 
 You're going to need version 1.5.1 of `getdns` for this package to install.
 
-I've gotten this running on macOS and Ubuntu 16.04. For the latter I had to ensure `libidn2-dev` and
+I've gotten this running on macOS and Ubuntu 16.04. For the latter I had to ensure `libidn2-0-dev` and
 `libunbound-dev` were installed then had to grab the 1.5.1 tarball (e.g. `aria2c https://getdnsapi.net/releases/getdns-1-5-1/getdns-1.5.1.tar.gz`), extract it and `config`/`make`/`make install` (plus `ldconfig` after).
 
 ## TODO/WAT
