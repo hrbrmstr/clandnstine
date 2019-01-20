@@ -3,7 +3,7 @@ sudo: false
 cache: packages
 
 before_install:
-  - sudo apt-get install -y libgetdns-dev libidn2-dev libunbound-dev
+  - sudo apt-get install -y libgetdns-devel libidn2-devel libunbound-devel
 
 addons:
   apt:
