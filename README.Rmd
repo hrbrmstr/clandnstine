@@ -1,7 +1,7 @@
 ---
 output: rmarkdown::github_document
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 ```{r pkg-knitr-opts, include=FALSE}
 knitr::opts_chunk$set(collapse=TRUE, fig.retina=2, message=FALSE, warning=FALSE)
@@ -31,8 +31,6 @@ Requires [`getdns`](https://getdnsapi.net/) to be installed and available for co
 ## TODO/WAT
 
 I finally grok the getdns api so the package api is going to change wildly and fast. It's only going to support DNS over TLS but will support all types of DNS queries. 
-
-The current "got it working" single function is stupid slow since it creates and destroys a context or each lookup. DNS over TLS was designed to support maintaining a session to avoid this overhead so the package is going to migrate to a "create a resolver" then "use this resolver to resolve X" then "destroy (or have R autodestroy)" the C-size resolver context when the R object goes away model pretty quickly. 
 
 ## Why?
 
@@ -82,7 +80,10 @@ It's stupid slow, consumes more CPU and bandwidth but forces adversaries to work
 
 The following functions are implemented:
 
-- `get_address`:	Lookup IP Address(es) for a Given Host
+- `gdns_get_address`:	Resolve a host to an addrss
+- `gdns_lib_version`:	Return gdns library version
+- `gdns_query`:	Arbitrary DNS queries
+- `gdns_resolver`:	Create a gdns DNS over TLS context and populate it with a resolver for use in resolution functions
 
 ## Installation
 
@@ -102,13 +103,33 @@ packageVersion("clandnstine")
 
 ```
 
+### Get an address(es) from a name:
+
 ```{r addr}
-get_address("r-project.org") # use built-in default of Quad9 (9.9.9.9)
+gdns_lib_version()
 
-get_address("yahoo.com", "8.8.8.8") # use google and get a bigger return back, too
+(x <- gdns_resolver())
 
-get_address("doesnotexist.commmm", "1.1.1.1") # nothing to find
+(x <- gdns_resolver("1.1.1.1"))
+
+(x <- gdns_resolver(c("8.8.8.8", "1.1.1.1", "9.9.9.9")))
+
+(gdns_get_address(x, "rud.is"))
+
+(gdns_get_address(x, "yahoo.com"))
+
+(gdns_get_address(x, "yahoo.commmm"))
 ```
+
+### Any record type query:
+
+```{r generic}
+str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
+
+sort(unlist(leno$replies_tree$answer[[1]]$rdata$txt_strings))
+```
+
+Yep. Advertising even in DNS `TXT` records (see item number 8).
 
 ## clandnstine Metrics
 

@@ -29,13 +29,6 @@ I finally grok the getdns api so the package api is going to change
 wildly and fast. It’s only going to support DNS over TLS but will
 support all types of DNS queries.
 
-The current “got it working” single function is stupid slow since it
-creates and destroys a context or each lookup. DNS over TLS was designed
-to support maintaining a session to avoid this overhead so the package
-is going to migrate to a “create a resolver” then “use this resolver to
-resolve X” then “destroy (or have R autodestroy)” the C-size resolver
-context when the R object goes away model pretty quickly.
-
 ## Why?
 
 Well, for starters, to help research DNS over TLS servers. Plus, for
@@ -108,7 +101,11 @@ to work pretty hard to try to figure out what you’re looking for.
 
 The following functions are implemented:
 
-  - `get_address`: Lookup IP Address(es) for a Given Host
+  - `gdns_get_address`: Resolve a host to an addrss
+  - `gdns_lib_version`: Return gdns library version
+  - `gdns_query`: Arbitrary DNS queries
+  - `gdns_resolver`: Create a gdns DNS over TLS context and populate it
+    with a resolver for use in resolution functions
 
 ## Installation
 
@@ -128,26 +125,65 @@ packageVersion("clandnstine")
 ## [1] '0.1.0'
 ```
 
+### Get an address(es) from a name:
+
 ``` r
-get_address("r-project.org") # use built-in default of Quad9 (9.9.9.9)
-## [1] "137.208.57.37"
+gdns_lib_version()
+## [1] "1.5.1"
 
-get_address("yahoo.com", "8.8.8.8") # use google and get a bigger return back, too
-##  [1] "2001:4998:c:1023::4"   "2001:4998:c:1023::5"   "2001:4998:58:1836::11" "2001:4998:44:41d::4"  
-##  [5] "2001:4998:58:1836::10" "2001:4998:44:41d::3"   "72.30.35.10"           "98.137.246.7"         
-##  [9] "98.137.246.8"          "98.138.219.231"        "72.30.35.9"            "98.138.219.232"
+(x <- gdns_resolver())
+## <gdns v1.5.1 resolver context; resolvers: [9.9.9.9]>
 
-get_address("doesnotexist.commmm", "1.1.1.1") # nothing to find
+(x <- gdns_resolver("1.1.1.1"))
+## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]>
+
+(x <- gdns_resolver(c("8.8.8.8", "1.1.1.1", "9.9.9.9")))
+## <gdns v1.5.1 resolver context; resolvers: [8.8.8.8, 1.1.1.1, 9.9.9.9]>
+
+(gdns_get_address(x, "rud.is"))
+## [1] "2604:a880:800:10::6bc:2001" "104.236.112.222"
+
+(gdns_get_address(x, "yahoo.com"))
+##  [1] "2001:4998:58:1836::11" "2001:4998:58:1836::10" "2001:4998:c:1023::5"   "2001:4998:c:1023::4"  
+##  [5] "2001:4998:44:41d::3"   "2001:4998:44:41d::4"   "98.138.219.232"        "98.138.219.231"       
+##  [9] "98.137.246.8"          "98.137.246.7"          "72.30.35.10"           "72.30.35.9"
+
+(gdns_get_address(x, "yahoo.commmm"))
 ## character(0)
 ```
+
+### Any record type query:
+
+``` r
+str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
+## List of 5
+##  $ answer_type   : int 800
+##  $ canonical_name: chr "lenovo.com."
+##  $ replies_full  : int [1, 1:600] 55 84 129 128 0 1 0 8 0 0 ...
+##  $ replies_tree  :'data.frame':  1 obs. of  7 variables:
+##  $ status        : int 900
+
+sort(unlist(leno$replies_tree$answer[[1]]$rdata$txt_strings))
+## [1] "a82c74b37aa84e7c8580f0e32f4d795d"                                                        
+## [2] "ece42d7743c84d6889abda7011fe6f53"                                                        
+## [3] "facebook-domain-verification=1r2am7c2bhzrxpqyt0mda0djoquqsi"                             
+## [4] "google-site-verification=VxW_e6r_Ka7A518qfX2MmIMHGnkpGbnACsjSxKFCBw0"                    
+## [5] "iHzQJvsKnyGP2Nm2qBgL3fyBJ0CC9z4GkY/flfk4EzLP8lPxWHDDPKqZWm1TkeF5kEIL+NotYOF1wo7JtUDXXw=="
+## [6] "qh7hdmqm4lzs85p704d6wsybgrpsly0j"                                                        
+## [7] "v=spf1 include:spf.messagelabs.com include:_netblocks.eloqua.com ~all"                   
+## [8] "Visit www.lenovo.com/think for information about Lenovo products and services"
+```
+
+Yep. Advertising even in DNS `TXT` records (see item number
+8).
 
 ## clandnstine Metrics
 
 | Lang | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
 | :--- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
-| C++  |        2 | 0.29 |  72 | 0.79 |          23 | 0.35 |       13 | 0.11 |
-| Rmd  |        1 | 0.14 |  10 | 0.11 |          38 | 0.58 |       74 | 0.64 |
-| R    |        4 | 0.57 |   9 | 0.10 |           4 | 0.06 |       28 | 0.24 |
+| C++  |        3 | 0.25 | 240 | 0.59 |          66 | 0.50 |       61 | 0.20 |
+| R    |        8 | 0.67 | 154 | 0.38 |          20 | 0.15 |      168 | 0.54 |
+| Rmd  |        1 | 0.08 |  16 | 0.04 |          46 | 0.35 |       81 | 0.26 |
 
 ## Code of Conduct
 

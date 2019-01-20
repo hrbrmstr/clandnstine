@@ -6,8 +6,13 @@
 #' @export
 print.gctx <- function(x, ...) {
   if (is_null_xptr_(x)) {
-    cat("<gdns resolver context (INVALID)>\n")
+    cat("<gdns v", gdns_lib_version(), " resolver context (INVALID)>\n")
   } else {
-    cat("<gdns resolver context; resolvers: ", int_get_resolvers(x) ,">\n", sep="")
+    cat(
+      "<gdns v", gdns_lib_version(),
+      " resolver context; resolvers: [",
+      paste0(int_get_resolvers(x), collapse=", "),
+      "]>\n", sep = ""
+    )
   }
 }

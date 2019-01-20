@@ -10,7 +10,7 @@
 #' @name clandnstine
 #' @docType package
 #' @author Bob Rudis (bob@@rud.is)
-#' @import httr
+#' @keywords internal
 #' @importFrom jsonlite fromJSON
 #' @useDynLib clandnstine, .registration = TRUE
 #' @importFrom Rcpp sourceCpp

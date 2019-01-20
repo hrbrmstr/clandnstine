@@ -5,15 +5,13 @@
 
 using namespace Rcpp;
 
-// get_address
-CharacterVector get_address(std::string host, std::string resolver);
-RcppExport SEXP _clandnstine_get_address(SEXP hostSEXP, SEXP resolverSEXP) {
+// gdns_lib_version
+std::string gdns_lib_version();
+RcppExport SEXP _clandnstine_gdns_lib_version() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type host(hostSEXP);
-    Rcpp::traits::input_parameter< std::string >::type resolver(resolverSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_address(host, resolver));
+    rcpp_result_gen = Rcpp::wrap(gdns_lib_version());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -38,14 +36,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gdns_resolver
-SEXP gdns_resolver(std::string resolver);
-RcppExport SEXP _clandnstine_gdns_resolver(SEXP resolverSEXP) {
+// int_gdns_resolver
+SEXP int_gdns_resolver(std::vector< std::string > resolvers);
+RcppExport SEXP _clandnstine_int_gdns_resolver(SEXP resolversSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type resolver(resolverSEXP);
-    rcpp_result_gen = Rcpp::wrap(gdns_resolver(resolver));
+    Rcpp::traits::input_parameter< std::vector< std::string > >::type resolvers(resolversSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_gdns_resolver(resolvers));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -72,14 +70,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// int_gdns_query
+CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr);
+RcppExport SEXP _clandnstine_int_gdns_query(SEXP gctxSEXP, SEXP nameSEXP, SEXP rrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< uint16_t >::type rr(rrSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_gdns_query(gctx, name, rr));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_clandnstine_get_address", (DL_FUNC) &_clandnstine_get_address, 2},
+    {"_clandnstine_gdns_lib_version", (DL_FUNC) &_clandnstine_gdns_lib_version, 0},
     {"_clandnstine_check_is_xptr", (DL_FUNC) &_clandnstine_check_is_xptr, 1},
     {"_clandnstine_is_null_xptr_", (DL_FUNC) &_clandnstine_is_null_xptr_, 1},
-    {"_clandnstine_gdns_resolver", (DL_FUNC) &_clandnstine_gdns_resolver, 1},
+    {"_clandnstine_int_gdns_resolver", (DL_FUNC) &_clandnstine_int_gdns_resolver, 1},
     {"_clandnstine_gdns_get_address", (DL_FUNC) &_clandnstine_gdns_get_address, 2},
     {"_clandnstine_int_get_resolvers", (DL_FUNC) &_clandnstine_int_get_resolvers, 1},
+    {"_clandnstine_int_gdns_query", (DL_FUNC) &_clandnstine_int_gdns_query, 3},
     {NULL, NULL, 0}
 };
 

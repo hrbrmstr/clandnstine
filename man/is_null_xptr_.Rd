@@ -12,3 +12,4 @@ is_null_xptr_(s)
 \description{
 Test whether an external pointer is null
 }
+\keyword{internal}

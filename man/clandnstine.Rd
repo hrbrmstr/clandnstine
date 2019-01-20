@@ -18,3 +18,4 @@ Something something 'getdns API/library'.
 \author{
 Bob Rudis (bob@rud.is)
 }
+\keyword{internal}

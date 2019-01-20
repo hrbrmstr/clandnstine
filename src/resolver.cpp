@@ -7,6 +7,7 @@ using namespace Rcpp;
 //' Test whether an object is an external pointer
 //'
 //' @param x object to test
+//' @keywords internal
 // [[Rcpp::export]]
 void check_is_xptr(SEXP s) {
   if (TYPEOF(s) != EXTPTRSXP) {
@@ -17,6 +18,7 @@ void check_is_xptr(SEXP s) {
 //' Test whether an external pointer is null
 //'
 //' @param x object to test
+//' @keywords internal
 // [[Rcpp::export]]
 SEXP is_null_xptr_(SEXP s) {
   check_is_xptr(s);
@@ -30,27 +32,24 @@ static void gctx_finalizer(SEXP ptr) {
   R_ClearExternalPtr(ptr); /* not really needed */
 }
 
-//' Create a gdns DNS over TLS context and populate it with a resolver
-//' for use in resolution functions
-//'
-//' @param resolver length 1 <chr> of a valid DNS over TLS resolver;
-//'        Defaults to Quad9 (`9.9.9.9`).
-//' @export
-//' @examples
-//' x <- gdns_resolver()
+//' Internal version of gdns_resolver
+//' @keywords internal
 // [[Rcpp::export]]
-SEXP gdns_resolver(std::string resolver = "9.9.9.9") {
+SEXP int_gdns_resolver(std::vector< std::string > resolvers) {
 
   bool ok = false;
   SEXP ptr;
   getdns_return_t r;
   getdns_context *ctxt = NULL;
 
+  // TODO Validate we don't need to free these
   getdns_dict *resolver_dict = getdns_dict_create();
-  r = getdns_str2dict(resolver.c_str(), &resolver_dict);
-
   getdns_list *resolver_list = getdns_list_create();
-  r = getdns_list_set_dict(resolver_list, 0, resolver_dict);
+
+  for (int i = 0; i<resolvers.size(); i++) {
+    r = getdns_str2dict(resolvers[i].c_str(), &resolver_dict);
+    r = getdns_list_set_dict(resolver_list, i, resolver_dict);
+  }
 
   getdns_transport_list_t tls_transport[] = { GETDNS_TRANSPORT_TLS };
 
@@ -116,6 +115,7 @@ CharacterVector gdns_get_address(SEXP gctx, std::string host) {
       getdns_dict *cur_addr;
       getdns_bindata *address;
 
+      // TODO Validate we don't need to free these
       r = getdns_list_get_dict(addrs, i, &cur_addr);
       r = getdns_dict_get_bindata(cur_addr, "address_data", &address);
 
@@ -166,6 +166,7 @@ CharacterVector int_get_resolvers(SEXP gctx) {
       getdns_dict *cur_addr;
       getdns_bindata *address;
 
+      // TODO Validate we don't need to free these
       r = getdns_list_get_dict(addrs, i, &cur_addr);
       r = getdns_dict_get_bindata(cur_addr, "address_data", &address);
 
@@ -188,5 +189,42 @@ CharacterVector int_get_resolvers(SEXP gctx) {
 }
 
 
+// [[Rcpp::export]]
+CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr) {
 
+  uint32_t err;
+  size_t sz;
+  getdns_return_t r;
+  getdns_dict *resp = NULL;
+  getdns_list *results;
+  std::string out;
+  bool ok = false;
 
+  getdns_context *ctxt = (getdns_context *)R_ExternalPtrAddr(gctx);
+
+  if (gctx == NULL) return(CharacterVector());
+
+  if ((r = getdns_general_sync(ctxt, name.c_str(), rr, NULL, &resp))) {
+  } else if ((r = getdns_dict_get_int(resp, "status", &err))) {
+  } else if (err != GETDNS_RESPSTATUS_GOOD) {
+  } else {
+    ok = true;
+  }
+
+  if (ok) {
+
+    char *charout = getdns_print_json_dict(resp, 0);
+    if (charout) {
+      out = std::string(charout);
+      free(charout);
+    } else {
+      ok = false;
+    }
+
+  }
+
+  if (resp) getdns_dict_destroy(resp);
+
+  if (ok) return(wrap(out)); else return(CharacterVector());
+
+}

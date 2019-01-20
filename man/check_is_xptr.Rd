@@ -12,3 +12,4 @@ check_is_xptr(s)
 \description{
 Test whether an object is an external pointer
 }
+\keyword{internal}
