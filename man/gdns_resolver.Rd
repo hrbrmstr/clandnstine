@@ -8,7 +8,7 @@ for use in resolution functions}
 gdns_resolver(resolvers = "9.9.9.9")
 }
 \arguments{
-\item{resolver}{character vector of valid DNS over TLS resolvers;
+\item{resolvers}{character vector of valid DNS over TLS resolvers;
 Defaults to Quad9 (\code{9.9.9.9}).}
 }
 \description{

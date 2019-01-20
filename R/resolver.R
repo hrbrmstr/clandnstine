@@ -1,7 +1,7 @@
 #' Create a gdns DNS over TLS context and populate it with a resolver
 #' for use in resolution functions
 #'
-#' @param resolver character vector of valid DNS over TLS resolvers;
+#' @param resolvers character vector of valid DNS over TLS resolvers;
 #'        Defaults to Quad9 (`9.9.9.9`).
 #' @export
 #' @examples
@@ -109,15 +109,18 @@ gdns_resolver <- function(resolvers = "9.9.9.9") {
 #' - `x25`
 #' - `zonemd`
 #'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param name an entity to query for
+#' @param rr_type what resource record type do you want to queyr for? See `Details`.
 #' @references <https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml>
 #' @export
 #' @examples
 #' x <- gdns_resolver()
 #' gdns_query(x, "example.com")
-gdns_query <- function(gcx, name, rr_type = "txt") {
+gdns_query <- function(gctx, name, rr_type = "txt") {
 
   rr_type <- match.arg(trimws(tolower(rr_type[1])), names(rr_types))
-  res <- int_gdns_query(gcx, name, unname(as.integer(rr_types[rr_type])))
+  res <- int_gdns_query(gctx, name, unname(as.integer(rr_types[rr_type])))
   if (length(res)) {
     out <- jsonlite::fromJSON(res)
     out
