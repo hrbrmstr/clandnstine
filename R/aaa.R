@@ -1,3 +1,5 @@
+set_names <- function (object = nm, nm) { names(object) <- nm ; object }
+
 rr_types <- c(
 a = 1,
 ns = 2,
@@ -86,3 +88,5 @@ doa = 259,
 ta = 32768,
 dlv = 32769
 )
+
+rr_types_rev <- set_names(names(rr_types), as.character(rr_types))

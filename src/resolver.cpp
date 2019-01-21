@@ -22,7 +22,8 @@ void check_is_xptr(SEXP s) {
 // [[Rcpp::export]]
 SEXP is_null_xptr_(SEXP s) {
   check_is_xptr(s);
-  return Rf_ScalarLogical(R_ExternalPtrAddr(s) == NULL);
+  void *r = (void *)R_ExternalPtrAddr(s);
+  return wrap(r == NULL);
 }
 
 static void gctx_finalizer(SEXP ptr) {
@@ -92,6 +93,8 @@ CharacterVector gdns_get_address(SEXP gctx, std::string host) {
   std::vector< std::string > out;
   bool ok = false;
 
+  check_is_xptr(gctx);
+
   getdns_context *ctxt = (getdns_context *)R_ExternalPtrAddr(gctx);
 
   if (gctx == NULL) return(CharacterVector());
@@ -145,6 +148,8 @@ CharacterVector int_get_resolvers(SEXP gctx) {
   getdns_list *addrs;
   std::vector< std::string > out;
 
+  check_is_xptr(gctx);
+
   getdns_context *ctxt = (getdns_context *)R_ExternalPtrAddr(gctx);
   if (gctx == NULL) return(CharacterVector());
 
@@ -193,15 +198,16 @@ CharacterVector int_get_resolvers(SEXP gctx) {
 CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr) {
 
   uint32_t err;
-  size_t sz;
+  // size_t sz;
   getdns_return_t r;
   getdns_dict *resp = NULL;
-  getdns_list *results;
+  // getdns_list *results;
   std::string out;
   bool ok = false;
 
-  getdns_context *ctxt = (getdns_context *)R_ExternalPtrAddr(gctx);
+  check_is_xptr(gctx);
 
+  getdns_context *ctxt = (getdns_context *)R_ExternalPtrAddr(gctx);
   if (gctx == NULL) return(CharacterVector());
 
   if ((r = getdns_general_sync(ctxt, name.c_str(), rr, NULL, &resp))) {

@@ -123,9 +123,47 @@ gdns_query <- function(gctx, name, rr_type = "txt") {
   res <- int_gdns_query(gctx, name, unname(as.integer(rr_types[rr_type])))
   if (length(res)) {
     out <- jsonlite::fromJSON(res)
+    class(out) <- c("gdns_response", "list")
     out
   } else {
     NULL
   }
 
 }
+
+list(`1` = "ipv4_address", `2` = "nsdname", `6` = c("expire",
+"minimum", "mname", "refresh", "retry", "rname", "serial"), `16` = "txt_strings",
+    `28` = "ipv6_address", `43` = c("algorithm", "digest", "digest_type",
+    "key_tag"), `46` = c("algorithm", "key_tag", "labels", "original_ttl",
+    "signature", "signature_expiration", "signature_inception",
+    "signers_name", "type_covered"), `47` = c("next_domain_name",
+    "type_bit_maps"), `48` = c("algorithm", "flags", "protocol",
+    "public_key")) -> rr_fields
+
+#' Printer for gdns_response objects
+#'
+#' @param x a `gdns_response` object
+#' @param ... ignored
+#' @keywords internal
+#' @export
+print.gdns_response <- function(x, ...) {
+
+  cat(
+    "Query: ",
+    x$replies_tree$question$qname[1], " ",
+    toupper(rr_types_rev[x$replies_tree$question$qtype[1]]),
+    "\n", sep=""
+  )
+
+  print(str(
+    x$replies_tree$answer[[1]]$rdata[
+      rr_fields[[as.character(unique(x$replies_tree$answer[[1]]$type))]]
+    ], 1
+  ))
+
+}
+
+
+
+
+
