@@ -129,7 +129,7 @@ gdns_query <- function(gctx, name, rr_type = "txt", rr_class = 1L,
 
   rr_type <- match.arg(trimws(tolower(rr_type[1])), names(rr_types))
   res <- int_gdns_query(gctx, name, unname(as.integer(rr_types[rr_type])),
-                        as.integer(rr_class), as.logical(include_reporting))
+                        as.logical(include_reporting))
   if (length(res)) {
     out <- jsonlite::fromJSON(res)
     class(out) <- c("gdns_response", "list")
