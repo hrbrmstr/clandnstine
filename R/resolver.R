@@ -155,11 +155,7 @@ print.gdns_response <- function(x, ...) {
     "\n", sep=""
   )
 
-  print(str(
-    x$replies_tree$answer[[1]]$rdata[
-      rr_fields[[as.character(unique(x$replies_tree$answer[[1]]$type))]]
-    ], 1
-  ))
+  print(str(x$replies_tree$answer[[1]]))
 
 }
 
