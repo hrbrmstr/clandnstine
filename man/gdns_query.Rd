@@ -4,7 +4,8 @@
 \alias{gdns_query}
 \title{Arbitrary DNS queries}
 \usage{
-gdns_query(gctx, name, rr_type = "txt")
+gdns_query(gctx, name, rr_type = "txt", rr_class = 1L,
+  include_reporting = FALSE)
 }
 \arguments{
 \item{gctx}{gdns resolver context created with \code{\link[=gdns_resolver]{gdns_resolver()}}}
@@ -12,6 +13,9 @@ gdns_query(gctx, name, rr_type = "txt")
 \item{name}{an entity to query for}
 
 \item{rr_type}{what resource record type do you want to queyr for? See \code{Details}.}
+
+\item{include_reporting}{if \code{TRUE} include debugging information for queries
+such as the length of time it takes for each query. Default: \code{FALSE}}
 }
 \description{
 Perform any valid resource record inquiry for a given name. See \code{Details}.

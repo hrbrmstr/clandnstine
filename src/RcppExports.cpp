@@ -71,15 +71,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // int_gdns_query
-CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr);
-RcppExport SEXP _clandnstine_int_gdns_query(SEXP gctxSEXP, SEXP nameSEXP, SEXP rrSEXP) {
+CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr, bool include_reporting);
+RcppExport SEXP _clandnstine_int_gdns_query(SEXP gctxSEXP, SEXP nameSEXP, SEXP rrSEXP, SEXP include_reportingSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
     Rcpp::traits::input_parameter< uint16_t >::type rr(rrSEXP);
-    rcpp_result_gen = Rcpp::wrap(int_gdns_query(gctx, name, rr));
+    Rcpp::traits::input_parameter< bool >::type include_reporting(include_reportingSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_gdns_query(gctx, name, rr, include_reporting));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -91,7 +92,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_clandnstine_int_gdns_resolver", (DL_FUNC) &_clandnstine_int_gdns_resolver, 1},
     {"_clandnstine_gdns_get_address", (DL_FUNC) &_clandnstine_gdns_get_address, 2},
     {"_clandnstine_int_get_resolvers", (DL_FUNC) &_clandnstine_int_get_resolvers, 1},
-    {"_clandnstine_int_gdns_query", (DL_FUNC) &_clandnstine_int_gdns_query, 3},
+    {"_clandnstine_int_gdns_query", (DL_FUNC) &_clandnstine_int_gdns_query, 4},
     {NULL, NULL, 0}
 };
 

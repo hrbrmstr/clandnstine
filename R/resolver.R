@@ -1,6 +1,8 @@
 #' Create a gdns DNS over TLS context and populate it with a resolver
 #' for use in resolution functions
 #'
+#' @note [DNS Privacy](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers#DNSPrivacyTestServers-DoTservers)
+#'       maintains a list of DNS over TLS servers.
 #' @param resolvers character vector of valid DNS over TLS resolvers;
 #'        Defaults to Quad9 (`9.9.9.9`).
 #' @export
@@ -112,15 +114,22 @@ gdns_resolver <- function(resolvers = "9.9.9.9") {
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param name an entity to query for
 #' @param rr_type what resource record type do you want to queyr for? See `Details`.
+#' @param include_reporting if `TRUE` include debugging information for queries
+#'        such as the length of time it takes for each query. Default: `FALSE`
 #' @references <https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml>
 #' @export
 #' @examples
 #' x <- gdns_resolver()
 #' gdns_query(x, "example.com")
-gdns_query <- function(gctx, name, rr_type = "txt") {
+gdns_query <- function(gctx, name, rr_type = "txt", rr_class = 1L,
+                       include_reporting = FALSE) {
+
+  rr_class <- rr_class[1]
+  if (!rr_class %in% c(1, 3, 4, 254, 255)) rr_class <- 1
 
   rr_type <- match.arg(trimws(tolower(rr_type[1])), names(rr_types))
-  res <- int_gdns_query(gctx, name, unname(as.integer(rr_types[rr_type])))
+  res <- int_gdns_query(gctx, name, unname(as.integer(rr_types[rr_type])),
+                        as.integer(rr_class), as.logical(include_reporting))
   if (length(res)) {
     out <- jsonlite::fromJSON(res)
     class(out) <- c("gdns_response", "list")

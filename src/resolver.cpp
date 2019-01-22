@@ -195,7 +195,8 @@ CharacterVector int_get_resolvers(SEXP gctx) {
 
 
 // [[Rcpp::export]]
-CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr) {
+CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr,
+                                 bool include_reporting = false) {
 
   uint32_t err;
   // size_t sz;
@@ -210,7 +211,16 @@ CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr) {
   getdns_context *ctxt = (getdns_context *)R_ExternalPtrAddr(gctx);
   if (gctx == NULL) return(CharacterVector());
 
-  if ((r = getdns_general_sync(ctxt, name.c_str(), rr, NULL, &resp))) {
+  getdns_dict *ext_d = getdns_dict_create();
+  if (include_reporting) {
+    getdns_dict_set_int(ext_d, "return_call_reporting", GETDNS_EXTENSION_TRUE);
+  }
+  // if (rrclass != 1) {
+  //   getdns_dict_set_int(ext_d, "specify_class", (uint32_t)rrclass);
+  // }
+
+  if ((r = getdns_general_sync(ctxt, name.c_str(), rr, ext_d, &resp))) {
+    Rf_warning("Bad query");
   } else if ((r = getdns_dict_get_int(resp, "status", &err))) {
   } else if (err != GETDNS_RESPSTATUS_GOOD) {
   } else {
@@ -228,6 +238,8 @@ CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr) {
     }
 
   }
+
+  if (ext_d) getdns_dict_destroy(ext_d);
 
   if (resp) getdns_dict_destroy(resp);
 

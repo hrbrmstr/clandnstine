@@ -15,6 +15,10 @@ Defaults to Quad9 (\code{9.9.9.9}).}
 Create a gdns DNS over TLS context and populate it with a resolver
 for use in resolution functions
 }
+\note{
+\href{https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers#DNSPrivacyTestServers-DoTservers}{DNS Privacy}
+maintains a list of DNS over TLS servers.
+}
 \examples{
 x <- gdns_resolver()
 x <- gdns_resolver("1.1.1.1")

@@ -47,7 +47,7 @@ int_get_resolvers <- function(gctx) {
     .Call(`_clandnstine_int_get_resolvers`, gctx)
 }
 
-int_gdns_query <- function(gctx, name, rr) {
-    .Call(`_clandnstine_int_gdns_query`, gctx, name, rr)
+int_gdns_query <- function(gctx, name, rr, include_reporting = FALSE) {
+    .Call(`_clandnstine_int_gdns_query`, gctx, name, rr, include_reporting)
 }
 
