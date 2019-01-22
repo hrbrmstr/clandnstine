@@ -131,14 +131,20 @@ gdns_query <- function(gctx, name, rr_type = "txt") {
 
 }
 
-list(`1` = "ipv4_address", `2` = "nsdname", `6` = c("expire",
-"minimum", "mname", "refresh", "retry", "rname", "serial"), `16` = "txt_strings",
-    `28` = "ipv6_address", `43` = c("algorithm", "digest", "digest_type",
-    "key_tag"), `46` = c("algorithm", "key_tag", "labels", "original_ttl",
-    "signature", "signature_expiration", "signature_inception",
-    "signers_name", "type_covered"), `47` = c("next_domain_name",
-    "type_bit_maps"), `48` = c("algorithm", "flags", "protocol",
-    "public_key")) -> rr_fields
+list(
+  `1` = "ipv4_address",
+  `2` = "nsdname",
+  `6` = c("expire", "minimum", "mname", "refresh", "retry", "rname", "serial"),
+  `16` = "txt_strings",
+  `28` = "ipv6_address",
+  `43` = c("algorithm", "digest", "digest_type", "key_tag"),
+  `46` = c(
+    "algorithm", "key_tag", "labels", "original_ttl", "signature",
+    "signature_expiration", "signature_inception", "signers_name", "type_covered"
+  ),
+  `47` = c("next_domain_name", "type_bit_maps"),
+  `48` = c("algorithm", "flags", "protocol", "public_key")
+) -> rr_fields
 
 #' Printer for gdns_response objects
 #'
@@ -155,7 +161,42 @@ print.gdns_response <- function(x, ...) {
     "\n", sep=""
   )
 
-  print(str(x$replies_tree$answer[[1]]))
+  qtype <- as.character(x$replies_tree$question$qtype[[1]])
+  ans <- x$replies_tree$answer[[1]]
+  ans$rdata$rdata_raw <- NULL
+
+  switch(
+    qtype,
+    "1" = {
+      cat(
+        "Answer: ",
+        paste0(unlist(x$just_address_answers$address_data), collapse="\n"),
+        "\n", sep=""
+      )
+    },
+    "16" = {
+      rd <- ans$rdata
+      typs <- ans$type
+      typs <- which(typs == 16)
+      if (length(typs)) {
+        cat(
+          "Answer: ",
+          paste0(unlist(rd$txt_strings[typs]), collapse="\n"),
+          "\n", sep=""
+        )
+      }
+    },
+    "28" = {
+      cat(
+        "Answer: ",
+        paste0(unlist(x$just_address_answers$address_data), collapse="\n"),
+        "\n", sep=""
+      )
+    },
+    {
+      print(str(ans$rdata, give.attr = FALSE))
+    }
+  )
 
 }
 
