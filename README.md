@@ -11,8 +11,10 @@ Perform Secure-by-default ‘DNS’ Queries
 
 ## Description
 
-Something something ‘DNS. Something something ’TLS’. Something something
-‘getdns API/library’.
+Methods are provided to query ‘Domain Name System’ (‘DNS’) stub and
+recursive resolvers for all ‘DNS’ resource record types using ‘UDP’,
+‘TCP’, and/or ‘TLS’ transport layers. ‘DNS’ query support is provided
+by the ‘getdns’ (\<getdnsapi.net\>) C library.
 
 ## NOTE
 
@@ -37,7 +39,8 @@ extract it and `config`/`make`/`make install` (plus `ldconfig` after).
 
 I finally grok the getdns api so the package api is going to change
 wildly and fast. The default mode will be to perform queries using DNS
-over TLS but also supports UDP and TCP transports.
+over TLS but support is also provided for UDP and TCP transports and
+either stub or recursive resolvers.
 
 ## Why?
 
@@ -189,9 +192,9 @@ gdns_lib_version()
 ## [1] "2604:a880:800:10::6bc:2001" "104.236.112.222"
 
 (gdns_get_address(x, "yahoo.com"))
-##  [1] "2001:4998:58:1836::10" "2001:4998:58:1836::11" "2001:4998:c:1023::4"   "2001:4998:c:1023::5"  
-##  [5] "2001:4998:44:41d::3"   "2001:4998:44:41d::4"   "72.30.35.9"            "72.30.35.10"          
-##  [9] "98.137.246.7"          "98.137.246.8"          "98.138.219.231"        "98.138.219.232"
+##  [1] "2001:4998:44:41d::4"   "2001:4998:58:1836::10" "2001:4998:58:1836::11" "2001:4998:c:1023::4"  
+##  [5] "2001:4998:c:1023::5"   "2001:4998:44:41d::3"   "98.137.246.8"          "98.138.219.231"       
+##  [9] "98.138.219.232"        "72.30.35.9"            "72.30.35.10"           "98.137.246.7"
 
 (gdns_get_address(x, "yahoo.commmm"))
 ## character(0)
@@ -204,7 +207,7 @@ str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
 ## List of 5
 ##  $ answer_type   : int 800
 ##  $ canonical_name: chr "lenovo.com."
-##  $ replies_full  : int [1, 1:600] 165 144 129 128 0 1 0 8 0 0 ...
+##  $ replies_full  : int [1, 1:600] 192 224 129 128 0 1 0 8 0 0 ...
 ##  $ replies_tree  :'data.frame':  1 obs. of  7 variables:
 ##  $ status        : int 900
 ##  - attr(*, "class")= chr [1:2] "gdns_response" "list"
@@ -228,7 +231,7 @@ Yep. Advertising even in DNS `TXT` records (see item number
 | Lang | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
 | :--- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
 | C++  |        3 | 0.21 | 608 | 0.65 |         196 | 0.62 |      138 | 0.27 |
-| R    |       10 | 0.71 | 306 | 0.33 |          68 | 0.22 |      280 | 0.54 |
+| R    |       10 | 0.71 | 306 | 0.33 |          68 | 0.22 |      283 | 0.55 |
 | Rmd  |        1 | 0.07 |  19 | 0.02 |          51 | 0.16 |       97 | 0.19 |
 
 ## Code of Conduct

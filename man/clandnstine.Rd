@@ -6,8 +6,10 @@
 \alias{clandnstine-package}
 \title{Perform Secure-by-default 'DNS' Queries}
 \description{
-Something something 'DNS. Something something 'TLS'.
-Something something 'getdns API/library'.
+Methods are provided to query 'Domain Name System' ('DNS') stub
+and recursive resolvers for all 'DNS' resource record types using 'UDP',
+TCP', and/or 'TLS' transport layers. 'DNS' query support is provided
+by the 'getdns' (<getdnsapi.net>) C library.
 }
 \details{
 \itemize{
