@@ -8,6 +8,46 @@ gdns_lib_version <- function() {
     .Call(`_clandnstine_gdns_lib_version`)
 }
 
+#' Internal version of gdns_update_resolvers
+#' @keywords internal
+int_gdns_update_resolvers <- function(gctx, resolvers) {
+    .Call(`_clandnstine_int_gdns_update_resolvers`, gctx, resolvers)
+}
+
+#' Specify the number of milliseconds to wait for request to return
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param timeout number of milliseconds (integer; i.e. not-fractional)
+#' @export
+gdns_set_timeout <- function(gctx, timeout) {
+    .Call(`_clandnstine_gdns_set_timeout`, gctx, timeout)
+}
+
+#' Retreive the number of milliseconds to wait for request to return
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+gdns_get_timeout <- function(gctx) {
+    .Call(`_clandnstine_gdns_get_timeout`, gctx)
+}
+
+#' Set/unset context to round robin queries over the available upstreams
+#' when resolving with the stub resolution type.
+#'
+#' @md
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param flag if `TRUE` (the default) round robin queries when using more than one stub resolver,
+#' @export
+gdns_set_round_robin_upstreams <- function(gctx, flag = TRUE) {
+    .Call(`_clandnstine_gdns_set_round_robin_upstreams`, gctx, flag)
+}
+
+#' Internal version of gdns_set_hosts()
+#' @keywords internal
+int_gdns_set_hosts <- function(gctx, hosts) {
+    .Call(`_clandnstine_int_gdns_set_hosts`, gctx, hosts)
+}
+
 #' Test whether an object is an external pointer
 #'
 #' @param x object to test

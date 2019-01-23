@@ -3,12 +3,12 @@ test_that("basic wrapper works", {
 
   expect_is(gdns_lib_version(), "character")
 
-  r <- gdns_resolver()
+  r <- gns_context()
 
   x <- gdns_get_address(r, "example.com")
   expect_true(all(c("2606:2800:220:1:248:1893:25c8:1946", "93.184.216.34") %in% x))
 
-  r <- gdns_resolver(c("8.8.8.8", "1.1.1.1", "9.9.9.9"))
+  r <- gdns_context(c("8.8.8.8", "1.1.1.1", "9.9.9.9"))
 
   x <- gdns_get_address(r, "example.com")
   expect_true(all(c("2606:2800:220:1:248:1893:25c8:1946", "93.184.216.34") %in% x))

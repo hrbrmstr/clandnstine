@@ -111,11 +111,22 @@ to work pretty hard to try to figure out what you’re looking for.
 
 The following functions are implemented:
 
+  - `gdns_context`: Create a gdns DNS over TLS context and populate it
+    with a resolver for use in resolution functions
   - `gdns_get_address`: Resolve a host to an addrss
+  - `gdns_get_timeout`: Retreive the number of milliseconds to wait for
+    request to return
   - `gdns_lib_version`: Return gdns library version
   - `gdns_query`: Arbitrary DNS queries
-  - `gdns_resolver`: Create a gdns DNS over TLS context and populate it
-    with a resolver for use in resolution functions
+  - `gdns_set_hosts`: Initialized the context’s local names namespace
+    with values from the given hosts file.
+  - `gdns_set_round_robin_upstreams`: Set/unset context to round robin
+    queries over the available upstreams when resolving with the stub
+    resolution type.
+  - `gdns_set_timeout`: Specify the number of milliseconds to wait for
+    request to return
+  - `gdns_update_resolvers`: Changes the list of resolvers in an already
+    created context for use in resolution functions
 
 ## Installation
 
@@ -141,22 +152,28 @@ packageVersion("clandnstine")
 gdns_lib_version()
 ## [1] "1.5.1"
 
-(x <- gdns_resolver())
-## <gdns v1.5.1 resolver context; resolvers: [9.9.9.9]>
+(x <- gdns_context())
+## <gdns v1.5.1 resolver context; resolvers: [9.9.9.9]; timeout: 5,000 ms>
 
-(x <- gdns_resolver("1.1.1.1"))
-## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]>
+(x <- gdns_context("1.1.1.1"))
+## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]; timeout: 5,000 ms>
 
-(x <- gdns_resolver(c("8.8.8.8", "1.1.1.1", "9.9.9.9")))
-## <gdns v1.5.1 resolver context; resolvers: [8.8.8.8, 1.1.1.1, 9.9.9.9]>
+(x <- gdns_context(c("8.8.8.8", "1.1.1.1", "9.9.9.9")))
+## <gdns v1.5.1 resolver context; resolvers: [8.8.8.8, 1.1.1.1, 9.9.9.9]; timeout: 5,000 ms>
+
+(gdns_set_timeout(x, 2000))
+## <gdns v1.5.1 resolver context; resolvers: [8.8.8.8, 1.1.1.1, 9.9.9.9]; timeout: 2,000 ms>
+
+(gdns_update_resolvers(x, "1.1.1.1"))
+## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]; timeout: 2,000 ms>
 
 (gdns_get_address(x, "rud.is"))
 ## [1] "2604:a880:800:10::6bc:2001" "104.236.112.222"
 
 (gdns_get_address(x, "yahoo.com"))
-##  [1] "2001:4998:c:1023::5"   "2001:4998:58:1836::11" "2001:4998:44:41d::3"   "2001:4998:44:41d::4"  
-##  [5] "2001:4998:c:1023::4"   "2001:4998:58:1836::10" "98.138.219.231"        "98.138.219.232"       
-##  [9] "98.137.246.8"          "72.30.35.9"            "72.30.35.10"           "98.137.246.7"
+##  [1] "2001:4998:44:41d::4"   "2001:4998:58:1836::10" "2001:4998:58:1836::11" "2001:4998:c:1023::4"  
+##  [5] "2001:4998:c:1023::5"   "2001:4998:44:41d::3"   "98.138.219.232"        "72.30.35.9"           
+##  [9] "72.30.35.10"           "98.137.246.7"          "98.137.246.8"          "98.138.219.231"
 
 (gdns_get_address(x, "yahoo.commmm"))
 ## character(0)
@@ -169,9 +186,10 @@ str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
 ## List of 5
 ##  $ answer_type   : int 800
 ##  $ canonical_name: chr "lenovo.com."
-##  $ replies_full  : int [1, 1:600] 135 135 129 128 0 1 0 8 0 0 ...
+##  $ replies_full  : int [1, 1:936] 55 119 129 128 0 1 0 8 0 0 ...
 ##  $ replies_tree  :'data.frame':  1 obs. of  7 variables:
 ##  $ status        : int 900
+##  - attr(*, "class")= chr [1:2] "gdns_response" "list"
 
 sort(unlist(leno$replies_tree$answer[[1]]$rdata$txt_strings))
 ## [1] "a82c74b37aa84e7c8580f0e32f4d795d"                                                        
@@ -191,9 +209,9 @@ Yep. Advertising even in DNS `TXT` records (see item number
 
 | Lang | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
 | :--- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
-| C++  |        3 | 0.25 | 240 | 0.59 |          66 | 0.49 |       61 | 0.19 |
-| R    |        8 | 0.67 | 154 | 0.38 |          20 | 0.15 |      171 | 0.54 |
-| Rmd  |        1 | 0.08 |  16 | 0.04 |          48 | 0.36 |       84 | 0.27 |
+| C++  |        3 | 0.25 | 369 | 0.59 |         112 | 0.55 |       77 | 0.20 |
+| R    |        8 | 0.67 | 242 | 0.38 |          42 | 0.20 |      220 | 0.57 |
+| Rmd  |        1 | 0.08 |  18 | 0.03 |          51 | 0.25 |       89 | 0.23 |
 
 ## Code of Conduct
 

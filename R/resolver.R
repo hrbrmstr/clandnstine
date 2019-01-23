@@ -7,11 +7,41 @@
 #'        Defaults to Quad9 (`9.9.9.9`).
 #' @export
 #' @examples
-#' x <- gdns_resolver()
-#' x <- gdns_resolver("1.1.1.1")
-gdns_resolver <- function(resolvers = "9.9.9.9") {
+#' x <- gdns_context()
+#' x <- gdns_context("1.1.1.1")
+gdns_context <- function(resolvers = "9.9.9.9") {
   int_gdns_resolver(resolvers)
 }
+
+#' Changes the list of resolvers in an already created context for use in resolution functions
+#'
+#' @note [DNS Privacy](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers#DNSPrivacyTestServers-DoTservers)
+#'       maintains a list of DNS over TLS servers.
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param resolvers character vector of valid DNS over TLS resolvers
+#' @export
+#' @examples
+#' x <- gdns_context()
+#' x <- gdns_update_resolvers("1.1.1.1")
+gdns_update_resolvers<- function(gctx, resolvers) {
+  int_gdns_update_resolvers(gctx, resolvers)
+}
+
+#' Initialized the context's local names namespace with values from the given hosts file.
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param hosts_file path to a valid `hosts` file (e.g. "`/etc/hosts`). This value
+#'        will be [path.expand()]ed.
+#' @export
+#' @examples
+#' x <- gdns_context()
+#' x <- gdns_set_hosts(x, "/etc/hosts")
+gdns_set_hosts<- function(gctx, hosts_file) {
+  hosts_file <- path.expand(hosts_file[1])
+  stopifnot(file.exists(hosts_file))
+  int_gdns_set_hosts(gctx, hosts_file)
+}
+
 
 #' Arbitrary DNS queries
 #'

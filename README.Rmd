@@ -85,10 +85,16 @@ It's stupid slow, consumes more CPU and bandwidth but forces adversaries to work
 
 The following functions are implemented:
 
-- `gdns_get_address`:	Resolve a host to an addrss
-- `gdns_lib_version`:	Return gdns library version
-- `gdns_query`:	Arbitrary DNS queries
-- `gdns_resolver`:	Create a gdns DNS over TLS context and populate it with a resolver for use in resolution functions
+
+- `gdns_context`:  Create a gdns DNS over TLS context and populate it with a resolver for use in resolution functions
+- `gdns_get_address`:  Resolve a host to an addrss
+- `gdns_get_timeout`:  Retreive the number of milliseconds to wait for request to return
+- `gdns_lib_version`:  Return gdns library version
+- `gdns_query`:  Arbitrary DNS queries
+- `gdns_set_hosts`:  Initialized the context's local names namespace with values from the given hosts file.
+- `gdns_set_round_robin_upstreams`:  Set/unset context to round robin queries over the available upstreams when resolving with the stub resolution type.
+- `gdns_set_timeout`:  Specify the number of milliseconds to wait for request to return
+- `gdns_update_resolvers`: Changes the list of resolvers in an already created context for use in resolution functions
 
 ## Installation
 
@@ -113,11 +119,15 @@ packageVersion("clandnstine")
 ```{r addr}
 gdns_lib_version()
 
-(x <- gdns_resolver())
+(x <- gdns_context())
 
-(x <- gdns_resolver("1.1.1.1"))
+(x <- gdns_context("1.1.1.1"))
 
-(x <- gdns_resolver(c("8.8.8.8", "1.1.1.1", "9.9.9.9")))
+(x <- gdns_context(c("8.8.8.8", "1.1.1.1", "9.9.9.9")))
+
+(gdns_set_timeout(x, 2000))
+
+(gdns_update_resolvers(x, "1.1.1.1"))
 
 (gdns_get_address(x, "rud.is"))
 
