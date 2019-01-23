@@ -12,7 +12,9 @@ print.gctx <- function(x, ...) {
       "<gdns v", gdns_lib_version(),
       " resolver context; resolvers: [",
       paste0(int_get_resolvers(x), collapse=", "),
-      "]; timeout: ", prettyNum(gdns_get_timeout(x), big.mark=","), " ms",
+      "]; timeout: ", prettyNum(gdns_get_timeout(x), big.mark=","),
+      " ms; lookup transport(s): [", paste0(gdns_get_transports(x), collapse=", "),
+      "]; resolution type: ", gdns_get_resolution_type(x),
       ">", "\n", sep = ""
     )
   }

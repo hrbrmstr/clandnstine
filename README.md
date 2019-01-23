@@ -7,7 +7,7 @@ Status](https://codecov.io/gh/hrbrmstr/clandnstine/branch/master/graph/badge.svg
 
 # clandnstine
 
-Perform ‘DNS’ over ‘TLS’ Queries
+Perform Secure-by-default ‘DNS’ Queries
 
 ## Description
 
@@ -36,8 +36,8 @@ extract it and `config`/`make`/`make install` (plus `ldconfig` after).
 ## TODO/WAT
 
 I finally grok the getdns api so the package api is going to change
-wildly and fast. It’s only going to support DNS over TLS but will
-support all types of DNS queries.
+wildly and fast. The default mode will be to perform queries using DNS
+over TLS but also supports UDP and TCP transports.
 
 ## Why?
 
@@ -114,17 +114,32 @@ The following functions are implemented:
   - `gdns_context`: Create a gdns DNS over TLS context and populate it
     with a resolver for use in resolution functions
   - `gdns_get_address`: Resolve a host to an addrss
+  - `gdns_get_resolution_type`: Get the current resolution type setting
   - `gdns_get_timeout`: Retreive the number of milliseconds to wait for
     request to return
+  - `gdns_get_tls_ca_file`: Retreive the file location with CA
+    certificates for verification purposes
+  - `gdns_get_tls_ca_path`: Retreive the value with which the context’s
+    upstream recursive servers and suffixes were initialized
+  - `gdns_get_transports`: Retreive what transports are used for DNS
+    lookups.
   - `gdns_lib_version`: Return gdns library version
   - `gdns_query`: Arbitrary DNS queries
   - `gdns_set_hosts`: Initialized the context’s local names namespace
     with values from the given hosts file.
+  - `gdns_set_resolution_type`: Specify whether DNS queries are
+    performed with recursive lookups or as a stub resolver
   - `gdns_set_round_robin_upstreams`: Set/unset context to round robin
     queries over the available upstreams when resolving with the stub
     resolution type.
   - `gdns_set_timeout`: Specify the number of milliseconds to wait for
     request to return
+  - `gdns_set_tls_ca_file`: Specify the file with CA certificates for
+    verification purposes
+  - `gdns_set_tls_ca_path`: Specify where the location for CA
+    certificates for verification purposes are located
+  - `gdns_set_transports`: Specifies what transport(s) is/ar used for
+    DNS lookups
   - `gdns_update_resolvers`: Changes the list of resolvers in an already
     created context for use in resolution functions
 
@@ -153,27 +168,30 @@ gdns_lib_version()
 ## [1] "1.5.1"
 
 (x <- gdns_context())
-## <gdns v1.5.1 resolver context; resolvers: [9.9.9.9]; timeout: 5,000 ms>
+## <gdns v1.5.1 resolver context; resolvers: [9.9.9.9]; timeout: 5,000 ms; lookup transport(s): [tls]; resolution type: stub>
 
 (x <- gdns_context("1.1.1.1"))
-## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]; timeout: 5,000 ms>
+## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]; timeout: 5,000 ms; lookup transport(s): [tls]; resolution type: stub>
 
 (x <- gdns_context(c("8.8.8.8", "1.1.1.1", "9.9.9.9")))
-## <gdns v1.5.1 resolver context; resolvers: [8.8.8.8, 1.1.1.1, 9.9.9.9]; timeout: 5,000 ms>
+## <gdns v1.5.1 resolver context; resolvers: [8.8.8.8, 1.1.1.1, 9.9.9.9]; timeout: 5,000 ms; lookup transport(s): [tls]; resolution type: stub>
 
 (gdns_set_timeout(x, 2000))
-## <gdns v1.5.1 resolver context; resolvers: [8.8.8.8, 1.1.1.1, 9.9.9.9]; timeout: 2,000 ms>
+## <gdns v1.5.1 resolver context; resolvers: [8.8.8.8, 1.1.1.1, 9.9.9.9]; timeout: 2,000 ms; lookup transport(s): [tls]; resolution type: stub>
 
 (gdns_update_resolvers(x, "1.1.1.1"))
-## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]; timeout: 2,000 ms>
+## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]; timeout: 2,000 ms; lookup transport(s): [tls]; resolution type: stub>
+
+(gdns_set_transports(x, c("udp", "tls", "tcp")))
+## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]; timeout: 2,000 ms; lookup transport(s): [udp, tls, tcp]; resolution type: stub>
 
 (gdns_get_address(x, "rud.is"))
 ## [1] "2604:a880:800:10::6bc:2001" "104.236.112.222"
 
 (gdns_get_address(x, "yahoo.com"))
-##  [1] "2001:4998:44:41d::4"   "2001:4998:58:1836::10" "2001:4998:58:1836::11" "2001:4998:c:1023::4"  
-##  [5] "2001:4998:c:1023::5"   "2001:4998:44:41d::3"   "98.138.219.232"        "72.30.35.9"           
-##  [9] "72.30.35.10"           "98.137.246.7"          "98.137.246.8"          "98.138.219.231"
+##  [1] "2001:4998:58:1836::10" "2001:4998:58:1836::11" "2001:4998:c:1023::4"   "2001:4998:c:1023::5"  
+##  [5] "2001:4998:44:41d::3"   "2001:4998:44:41d::4"   "72.30.35.9"            "72.30.35.10"          
+##  [9] "98.137.246.7"          "98.137.246.8"          "98.138.219.231"        "98.138.219.232"
 
 (gdns_get_address(x, "yahoo.commmm"))
 ## character(0)
@@ -186,7 +204,7 @@ str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
 ## List of 5
 ##  $ answer_type   : int 800
 ##  $ canonical_name: chr "lenovo.com."
-##  $ replies_full  : int [1, 1:936] 55 119 129 128 0 1 0 8 0 0 ...
+##  $ replies_full  : int [1, 1:600] 165 144 129 128 0 1 0 8 0 0 ...
 ##  $ replies_tree  :'data.frame':  1 obs. of  7 variables:
 ##  $ status        : int 900
 ##  - attr(*, "class")= chr [1:2] "gdns_response" "list"
@@ -209,9 +227,9 @@ Yep. Advertising even in DNS `TXT` records (see item number
 
 | Lang | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
 | :--- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
-| C++  |        3 | 0.25 | 369 | 0.59 |         112 | 0.55 |       77 | 0.20 |
-| R    |        8 | 0.67 | 242 | 0.38 |          42 | 0.20 |      220 | 0.57 |
-| Rmd  |        1 | 0.08 |  18 | 0.03 |          51 | 0.25 |       89 | 0.23 |
+| C++  |        3 | 0.21 | 608 | 0.65 |         196 | 0.62 |      138 | 0.27 |
+| R    |       10 | 0.71 | 306 | 0.33 |          68 | 0.22 |      280 | 0.54 |
+| Rmd  |        1 | 0.07 |  19 | 0.02 |          51 | 0.16 |       97 | 0.19 |
 
 ## Code of Conduct
 

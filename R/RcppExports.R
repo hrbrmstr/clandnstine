@@ -48,6 +48,76 @@ int_gdns_set_hosts <- function(gctx, hosts) {
     .Call(`_clandnstine_int_gdns_set_hosts`, gctx, hosts)
 }
 
+#' Internal version of set_transports()
+#' @keywords internal
+int_gdns_set_transports <- function(gctx, trans) {
+    .Call(`_clandnstine_int_gdns_set_transports`, gctx, trans)
+}
+
+#' Internal version of gdns_set_resolution_type()
+#' @keywords internal
+int_gdns_set_resolution_type <- function(gctx, res_type) {
+    .Call(`_clandnstine_int_gdns_set_resolution_type`, gctx, res_type)
+}
+
+#' Retreive what transports are used for DNS lookups.
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+gdns_get_transports <- function(gctx) {
+    .Call(`_clandnstine_gdns_get_transports`, gctx)
+}
+
+#' Retreive the value of the localnames namespace
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+gdns_get_hosts <- function(gctx) {
+    .Call(`_clandnstine_gdns_get_hosts`, gctx)
+}
+
+#' Retreive the value with which the context's upstream recursive servers and suffixes were initialized
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+gdns_get_resolvconf <- function(gctx) {
+    .Call(`_clandnstine_gdns_get_resolvconf`, gctx)
+}
+
+#' Retreive the value with which the context's upstream recursive servers and suffixes were initialized
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+gdns_get_tls_ca_path <- function(gctx) {
+    .Call(`_clandnstine_gdns_get_tls_ca_path`, gctx)
+}
+
+#' Retreive the file location with CA certificates for verification purposes
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+gdns_get_tls_ca_file <- function(gctx) {
+    .Call(`_clandnstine_gdns_get_tls_ca_file`, gctx)
+}
+
+#' Specify where the location for CA certificates for verification purposes are located
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param ca_path directory with Certificate Authority certificates
+#' @export
+gdns_set_tls_ca_path <- function(gctx, ca_path) {
+    .Call(`_clandnstine_gdns_set_tls_ca_path`, gctx, ca_path)
+}
+
+#' Specify the file with CA certificates for verification purposes
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param ca_file file with Certificate Authority certificates
+#' @export
+gdns_set_tls_ca_file <- function(gctx, ca_file) {
+    .Call(`_clandnstine_gdns_set_tls_ca_file`, gctx, ca_file)
+}
+
 #' Test whether an object is an external pointer
 #'
 #' @param x object to test
@@ -64,10 +134,10 @@ is_null_xptr_ <- function(s) {
     .Call(`_clandnstine_is_null_xptr_`, s)
 }
 
-#' Internal version of gdns_resolver
+#' Internal version of gdns_context
 #' @keywords internal
-int_gdns_resolver <- function(resolvers) {
-    .Call(`_clandnstine_int_gdns_resolver`, resolvers)
+int_gdns_context <- function(resolvers) {
+    .Call(`_clandnstine_int_gdns_context`, resolvers)
 }
 
 #' Resolve a host to an addrss
@@ -89,5 +159,16 @@ int_get_resolvers <- function(gctx) {
 
 int_gdns_query <- function(gctx, name, rr, include_reporting = FALSE) {
     .Call(`_clandnstine_int_gdns_query`, gctx, name, rr, include_reporting)
+}
+
+#' Get the current resolution type setting
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+#' @examples
+#' x <- gdns_context()
+#' gdns_get_resolution_type(x)
+gdns_get_resolution_type <- function(gctx) {
+    .Call(`_clandnstine_gdns_get_resolution_type`, gctx)
 }
 

@@ -33,10 +33,10 @@ static void gctx_finalizer(SEXP ptr) {
   R_ClearExternalPtr(ptr); /* not really needed */
 }
 
-//' Internal version of gdns_resolver
+//' Internal version of gdns_context
 //' @keywords internal
 // [[Rcpp::export]]
-SEXP int_gdns_resolver(std::vector< std::string > resolvers) {
+SEXP int_gdns_context(std::vector< std::string > resolvers) {
 
   bool ok = false;
   SEXP ptr;
@@ -244,5 +244,34 @@ CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr,
   if (resp) getdns_dict_destroy(resp);
 
   if (ok) return(wrap(out)); else return(CharacterVector());
+
+}
+
+//' Get the current resolution type setting
+//'
+//' @param gctx gdns resolver context created with [gdns_resolver()]
+//' @export
+//' @examples
+//' x <- gdns_context()
+//' gdns_get_resolution_type(x)
+// [[Rcpp::export]]
+CharacterVector gdns_get_resolution_type(SEXP gctx) {
+
+  check_is_xptr(gctx);
+
+  getdns_context *ctxt = (getdns_context *)R_ExternalPtrAddr(gctx);
+
+  if (gctx == NULL) return(CharacterVector());
+
+  getdns_return_t r;
+  getdns_resolution_t res_type;
+
+  if ((r = getdns_context_get_resolution_type(ctxt, &res_type))) {
+    Rf_error(getdns_get_errorstr_by_id(r));
+  }
+
+  std::string out = res_type == GETDNS_RESOLUTION_STUB ? "stub" : "recursive";
+
+  return(wrap(out));
 
 }

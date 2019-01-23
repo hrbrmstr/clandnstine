@@ -1,6 +1,6 @@
 Package: clandnstine
 Type: Package
-Title: Perform 'DNS' over 'TLS' Queries
+Title: Perform Secure-by-default 'DNS' Queries
 Version: 0.1.0
 Date: 2019-01-18
 Authors@R: c(

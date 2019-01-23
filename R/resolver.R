@@ -10,7 +10,7 @@
 #' x <- gdns_context()
 #' x <- gdns_context("1.1.1.1")
 gdns_context <- function(resolvers = "9.9.9.9") {
-  int_gdns_resolver(resolvers)
+  int_gdns_context(resolvers)
 }
 
 #' Changes the list of resolvers in an already created context for use in resolution functions
@@ -141,6 +141,7 @@ gdns_set_hosts<- function(gctx, hosts_file) {
 #' - `x25`
 #' - `zonemd`
 #'
+#' @note Local hosts files are ignored when using this `getdns` API endpoint
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param name an entity to query for
 #' @param rr_type what resource record type do you want to queyr for? See `Details`.

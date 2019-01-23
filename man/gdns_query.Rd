@@ -117,6 +117,9 @@ Valid values for \code{rr_type}:
 \item \code{zonemd}
 }
 }
+\note{
+Local hosts files are ignored when using this \code{getdns} API endpoint
+}
 \examples{
 x <- gdns_resolver()
 gdns_query(x, "example.com")

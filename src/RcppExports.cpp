@@ -74,6 +74,109 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// int_gdns_set_transports
+SEXP int_gdns_set_transports(SEXP gctx, IntegerVector trans);
+RcppExport SEXP _clandnstine_int_gdns_set_transports(SEXP gctxSEXP, SEXP transSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type trans(transSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_gdns_set_transports(gctx, trans));
+    return rcpp_result_gen;
+END_RCPP
+}
+// int_gdns_set_resolution_type
+SEXP int_gdns_set_resolution_type(SEXP gctx, int res_type);
+RcppExport SEXP _clandnstine_int_gdns_set_resolution_type(SEXP gctxSEXP, SEXP res_typeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    Rcpp::traits::input_parameter< int >::type res_type(res_typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_gdns_set_resolution_type(gctx, res_type));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_get_transports
+CharacterVector gdns_get_transports(SEXP gctx);
+RcppExport SEXP _clandnstine_gdns_get_transports(SEXP gctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_get_transports(gctx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_get_hosts
+CharacterVector gdns_get_hosts(SEXP gctx);
+RcppExport SEXP _clandnstine_gdns_get_hosts(SEXP gctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_get_hosts(gctx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_get_resolvconf
+CharacterVector gdns_get_resolvconf(SEXP gctx);
+RcppExport SEXP _clandnstine_gdns_get_resolvconf(SEXP gctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_get_resolvconf(gctx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_get_tls_ca_path
+StringVector gdns_get_tls_ca_path(SEXP gctx);
+RcppExport SEXP _clandnstine_gdns_get_tls_ca_path(SEXP gctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_get_tls_ca_path(gctx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_get_tls_ca_file
+StringVector gdns_get_tls_ca_file(SEXP gctx);
+RcppExport SEXP _clandnstine_gdns_get_tls_ca_file(SEXP gctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_get_tls_ca_file(gctx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_set_tls_ca_path
+SEXP gdns_set_tls_ca_path(SEXP gctx, std::string ca_path);
+RcppExport SEXP _clandnstine_gdns_set_tls_ca_path(SEXP gctxSEXP, SEXP ca_pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type ca_path(ca_pathSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_set_tls_ca_path(gctx, ca_path));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gdns_set_tls_ca_file
+SEXP gdns_set_tls_ca_file(SEXP gctx, std::string ca_file);
+RcppExport SEXP _clandnstine_gdns_set_tls_ca_file(SEXP gctxSEXP, SEXP ca_fileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type ca_file(ca_fileSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_set_tls_ca_file(gctx, ca_file));
+    return rcpp_result_gen;
+END_RCPP
+}
 // check_is_xptr
 void check_is_xptr(SEXP s);
 RcppExport SEXP _clandnstine_check_is_xptr(SEXP sSEXP) {
@@ -95,14 +198,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// int_gdns_resolver
-SEXP int_gdns_resolver(std::vector< std::string > resolvers);
-RcppExport SEXP _clandnstine_int_gdns_resolver(SEXP resolversSEXP) {
+// int_gdns_context
+SEXP int_gdns_context(std::vector< std::string > resolvers);
+RcppExport SEXP _clandnstine_int_gdns_context(SEXP resolversSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::vector< std::string > >::type resolvers(resolversSEXP);
-    rcpp_result_gen = Rcpp::wrap(int_gdns_resolver(resolvers));
+    rcpp_result_gen = Rcpp::wrap(int_gdns_context(resolvers));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -143,6 +246,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gdns_get_resolution_type
+CharacterVector gdns_get_resolution_type(SEXP gctx);
+RcppExport SEXP _clandnstine_gdns_get_resolution_type(SEXP gctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdns_get_resolution_type(gctx));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_clandnstine_gdns_lib_version", (DL_FUNC) &_clandnstine_gdns_lib_version, 0},
@@ -151,12 +265,22 @@ static const R_CallMethodDef CallEntries[] = {
     {"_clandnstine_gdns_get_timeout", (DL_FUNC) &_clandnstine_gdns_get_timeout, 1},
     {"_clandnstine_gdns_set_round_robin_upstreams", (DL_FUNC) &_clandnstine_gdns_set_round_robin_upstreams, 2},
     {"_clandnstine_int_gdns_set_hosts", (DL_FUNC) &_clandnstine_int_gdns_set_hosts, 2},
+    {"_clandnstine_int_gdns_set_transports", (DL_FUNC) &_clandnstine_int_gdns_set_transports, 2},
+    {"_clandnstine_int_gdns_set_resolution_type", (DL_FUNC) &_clandnstine_int_gdns_set_resolution_type, 2},
+    {"_clandnstine_gdns_get_transports", (DL_FUNC) &_clandnstine_gdns_get_transports, 1},
+    {"_clandnstine_gdns_get_hosts", (DL_FUNC) &_clandnstine_gdns_get_hosts, 1},
+    {"_clandnstine_gdns_get_resolvconf", (DL_FUNC) &_clandnstine_gdns_get_resolvconf, 1},
+    {"_clandnstine_gdns_get_tls_ca_path", (DL_FUNC) &_clandnstine_gdns_get_tls_ca_path, 1},
+    {"_clandnstine_gdns_get_tls_ca_file", (DL_FUNC) &_clandnstine_gdns_get_tls_ca_file, 1},
+    {"_clandnstine_gdns_set_tls_ca_path", (DL_FUNC) &_clandnstine_gdns_set_tls_ca_path, 2},
+    {"_clandnstine_gdns_set_tls_ca_file", (DL_FUNC) &_clandnstine_gdns_set_tls_ca_file, 2},
     {"_clandnstine_check_is_xptr", (DL_FUNC) &_clandnstine_check_is_xptr, 1},
     {"_clandnstine_is_null_xptr_", (DL_FUNC) &_clandnstine_is_null_xptr_, 1},
-    {"_clandnstine_int_gdns_resolver", (DL_FUNC) &_clandnstine_int_gdns_resolver, 1},
+    {"_clandnstine_int_gdns_context", (DL_FUNC) &_clandnstine_int_gdns_context, 1},
     {"_clandnstine_gdns_get_address", (DL_FUNC) &_clandnstine_gdns_get_address, 2},
     {"_clandnstine_int_get_resolvers", (DL_FUNC) &_clandnstine_int_get_resolvers, 1},
     {"_clandnstine_int_gdns_query", (DL_FUNC) &_clandnstine_int_gdns_query, 4},
+    {"_clandnstine_gdns_get_resolution_type", (DL_FUNC) &_clandnstine_gdns_get_resolution_type, 1},
     {NULL, NULL, 0}
 };
 

@@ -1,4 +1,4 @@
-#' Perform 'DNS' over 'TLS' Queries
+#' Perform Secure-by-default 'DNS' Queries
 #'
 #' Something something 'DNS. Something something 'TLS'.
 #' Something something 'getdns API/library'.
