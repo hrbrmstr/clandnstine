@@ -6,6 +6,7 @@
 #' @param resolvers character vector of valid DNS over TLS resolvers;
 #'        Defaults to Quad9 (`9.9.9.9`).
 #' @export
+#' @family query functions
 #' @examples
 #' x <- gdns_context()
 #' x <- gdns_context("1.1.1.1")
@@ -19,10 +20,11 @@ gdns_context <- function(resolvers = "9.9.9.9") {
 #'       maintains a list of DNS over TLS servers.
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param resolvers character vector of valid DNS over TLS resolvers
+#' @family context functions
 #' @export
 #' @examples
 #' x <- gdns_context()
-#' x <- gdns_update_resolvers("1.1.1.1")
+#' x <- gdns_update_resolvers(x, "1.1.1.1")
 gdns_update_resolvers<- function(gctx, resolvers) {
   int_gdns_update_resolvers(gctx, resolvers)
 }
@@ -33,15 +35,28 @@ gdns_update_resolvers<- function(gctx, resolvers) {
 #' @param hosts_file path to a valid `hosts` file (e.g. "`/etc/hosts`). This value
 #'        will be [path.expand()]ed.
 #' @export
+#' @family context functions
 #' @examples
 #' x <- gdns_context()
-#' x <- gdns_set_hosts(x, "/etc/hosts")
+#' gdns_set_hosts(x, "/etc/hosts")
 gdns_set_hosts<- function(gctx, hosts_file) {
   hosts_file <- path.expand(hosts_file[1])
   stopifnot(file.exists(hosts_file))
   int_gdns_set_hosts(gctx, hosts_file)
 }
 
+
+#' Retrieve the list of addresses in use for looking up top-level domains in use by the context.
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+#' @family context functions
+# x <- gdns_context()
+# gdns_get_root_servers(x)
+gdns_get_root_servers <- function(gctx) {
+  x <- int_gdns_get_root_servers(gctx);
+  if (length(x)) jsonlite::fromJSON(x) else NULL
+}
 
 #' Arbitrary DNS queries
 #'
@@ -148,6 +163,7 @@ gdns_set_hosts<- function(gctx, hosts_file) {
 #' @param include_reporting if `TRUE` include debugging information for queries
 #'        such as the length of time it takes for each query. Default: `FALSE`
 #' @references <https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml>
+#' @family query functions
 #' @export
 #' @examples
 #' x <- gdns_resolver()

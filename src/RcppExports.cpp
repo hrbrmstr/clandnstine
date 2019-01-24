@@ -177,6 +177,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// int_gdns_get_root_servers
+CharacterVector int_gdns_get_root_servers(SEXP gctx);
+RcppExport SEXP _clandnstine_int_gdns_get_root_servers(SEXP gctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type gctx(gctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_gdns_get_root_servers(gctx));
+    return rcpp_result_gen;
+END_RCPP
+}
 // check_is_xptr
 void check_is_xptr(SEXP s);
 RcppExport SEXP _clandnstine_check_is_xptr(SEXP sSEXP) {
@@ -274,6 +285,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_clandnstine_gdns_get_tls_ca_file", (DL_FUNC) &_clandnstine_gdns_get_tls_ca_file, 1},
     {"_clandnstine_gdns_set_tls_ca_path", (DL_FUNC) &_clandnstine_gdns_set_tls_ca_path, 2},
     {"_clandnstine_gdns_set_tls_ca_file", (DL_FUNC) &_clandnstine_gdns_set_tls_ca_file, 2},
+    {"_clandnstine_int_gdns_get_root_servers", (DL_FUNC) &_clandnstine_int_gdns_get_root_servers, 1},
     {"_clandnstine_check_is_xptr", (DL_FUNC) &_clandnstine_check_is_xptr, 1},
     {"_clandnstine_is_null_xptr_", (DL_FUNC) &_clandnstine_is_null_xptr_, 1},
     {"_clandnstine_int_gdns_context", (DL_FUNC) &_clandnstine_int_gdns_context, 1},

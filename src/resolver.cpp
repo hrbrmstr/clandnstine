@@ -77,6 +77,7 @@ SEXP int_gdns_context(std::vector< std::string > resolvers) {
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
 //' @param host to lookup
+//' @family query functions
 //' @export
 //' @examples
 //' x <- gdns_resolver()
@@ -251,6 +252,7 @@ CharacterVector int_gdns_query(SEXP gctx, std::string name, uint16_t rr,
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
 //' @export
+//' @family context functions
 //' @examples
 //' x <- gdns_context()
 //' gdns_get_resolution_type(x)

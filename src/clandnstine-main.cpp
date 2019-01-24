@@ -7,6 +7,7 @@ using namespace Rcpp;
 extern void check_is_xptr(SEXP s);
 //' Return gdns library version
 //'
+//' @family utlity functions
 //' @export
 // [[Rcpp::export]]
 std::string gdns_lib_version() {
@@ -48,6 +49,7 @@ SEXP int_gdns_update_resolvers(SEXP gctx, std::vector< std::string > resolvers) 
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
 //' @param timeout number of milliseconds (integer; i.e. not-fractional)
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 SEXP gdns_set_timeout(SEXP gctx, long timeout) {
@@ -71,6 +73,7 @@ SEXP gdns_set_timeout(SEXP gctx, long timeout) {
 //' Retreive the number of milliseconds to wait for request to return
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 DoubleVector gdns_get_timeout(SEXP gctx) {
@@ -101,6 +104,7 @@ DoubleVector gdns_get_timeout(SEXP gctx) {
 //' @md
 //' @param gctx gdns resolver context created with [gdns_resolver()]
 //' @param flag if `TRUE` (the default) round robin queries when using more than one stub resolver,
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 SEXP gdns_set_round_robin_upstreams(SEXP gctx, bool flag=true) {
@@ -196,6 +200,7 @@ SEXP int_gdns_set_resolution_type(SEXP gctx, int res_type) {
 //' Retreive what transports are used for DNS lookups.
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 CharacterVector gdns_get_transports(SEXP gctx) {
@@ -233,6 +238,7 @@ CharacterVector gdns_get_transports(SEXP gctx) {
 //' Retreive the value of the localnames namespace
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 CharacterVector gdns_get_hosts(SEXP gctx) {
@@ -257,6 +263,7 @@ CharacterVector gdns_get_hosts(SEXP gctx) {
 //' Retreive the value with which the context's upstream recursive servers and suffixes were initialized
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 CharacterVector gdns_get_resolvconf(SEXP gctx) {
@@ -281,6 +288,7 @@ CharacterVector gdns_get_resolvconf(SEXP gctx) {
 //' Retreive the value with which the context's upstream recursive servers and suffixes were initialized
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 StringVector gdns_get_tls_ca_path(SEXP gctx) {
@@ -305,6 +313,7 @@ StringVector gdns_get_tls_ca_path(SEXP gctx) {
 //' Retreive the file location with CA certificates for verification purposes
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 StringVector gdns_get_tls_ca_file(SEXP gctx) {
@@ -330,6 +339,7 @@ StringVector gdns_get_tls_ca_file(SEXP gctx) {
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
 //' @param ca_path directory with Certificate Authority certificates
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 SEXP gdns_set_tls_ca_path(SEXP gctx, std::string ca_path) {
@@ -354,6 +364,7 @@ SEXP gdns_set_tls_ca_path(SEXP gctx, std::string ca_path) {
 //'
 //' @param gctx gdns resolver context created with [gdns_resolver()]
 //' @param ca_file file with Certificate Authority certificates
+//' @family context functions
 //' @export
 // [[Rcpp::export]]
 SEXP gdns_set_tls_ca_file(SEXP gctx, std::string ca_file) {
@@ -371,5 +382,45 @@ SEXP gdns_set_tls_ca_file(SEXP gctx, std::string ca_file) {
   }
 
   return(gctx);
+
+}
+
+//' Retrieve the list of addresses in use for looking up top-level domains in use by the context.
+//'
+//' @param gctx gdns resolver context created with [gdns_resolver()]
+//' @keywords internal
+// [[Rcpp::export]]
+CharacterVector int_gdns_get_root_servers(SEXP gctx) {
+
+  check_is_xptr(gctx);
+
+  getdns_context *ctxt = (getdns_context *)R_ExternalPtrAddr(gctx);
+
+  if (gctx == NULL) return(R_NilValue);
+
+  getdns_return_t r;
+  getdns_list *addresses;
+
+  if ((r = getdns_context_get_dns_root_servers(ctxt, &addresses))) {
+    Rf_error(getdns_get_errorstr_by_id(r));
+  }
+
+  if (addresses) {
+    Rcout << "HERE" << std::endl;
+    char *lst = getdns_print_json_list(addresses, 0);
+    if (lst) {
+      Rcout << lst << std::endl;
+      std::string out = std::string(lst);
+      free(lst);
+      free(addresses);
+      return(wrap(out));
+    } else {
+      free(addresses);
+      return(CharacterVector());
+    }
+  } else {
+    return(CharacterVector());
+  }
+
 
 }

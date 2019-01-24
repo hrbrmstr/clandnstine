@@ -23,3 +23,8 @@ maintains a list of DNS over TLS servers.
 x <- gdns_context()
 x <- gdns_context("1.1.1.1")
 }
+\seealso{
+Other query functions: \code{\link{gdns_get_address}},
+  \code{\link{gdns_query}}
+}
+\concept{query functions}

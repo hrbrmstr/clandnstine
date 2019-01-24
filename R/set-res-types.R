@@ -4,6 +4,7 @@
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param res_type length 1 character vector of either "`stub`" or "`recursive`"
+#' @family context functions
 #' @export
 #' @examples
 #' x <- gdns_context()

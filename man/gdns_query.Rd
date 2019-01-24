@@ -127,3 +127,8 @@ gdns_query(x, "example.com")
 \references{
 \url{https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml}
 }
+\seealso{
+Other query functions: \code{\link{gdns_context}},
+  \code{\link{gdns_get_address}}
+}
+\concept{query functions}

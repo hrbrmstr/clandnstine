@@ -20,5 +20,22 @@ maintains a list of DNS over TLS servers.
 }
 \examples{
 x <- gdns_context()
-x <- gdns_update_resolvers("1.1.1.1")
+x <- gdns_update_resolvers(x, "1.1.1.1")
 }
+\seealso{
+Other context functions: \code{\link{gdns_get_hosts}},
+  \code{\link{gdns_get_resolution_type}},
+  \code{\link{gdns_get_resolvconf}},
+  \code{\link{gdns_get_root_servers}},
+  \code{\link{gdns_get_timeout}},
+  \code{\link{gdns_get_tls_ca_file}},
+  \code{\link{gdns_get_tls_ca_path}},
+  \code{\link{gdns_get_transports}},
+  \code{\link{gdns_set_hosts}},
+  \code{\link{gdns_set_resolution_type}},
+  \code{\link{gdns_set_round_robin_upstreams}},
+  \code{\link{gdns_set_timeout}},
+  \code{\link{gdns_set_tls_ca_file}},
+  \code{\link{gdns_set_tls_ca_path}}
+}
+\concept{context functions}
