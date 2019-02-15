@@ -23,7 +23,8 @@ Depends:
 Imports:
     jsonlite,
     Rcpp,
-    magrittr
+    magrittr,
+    glue
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 LinkingTo: 

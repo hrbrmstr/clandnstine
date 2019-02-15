@@ -45,7 +45,6 @@ gdns_set_hosts<- function(gctx, hosts_file) {
   int_gdns_set_hosts(gctx, hosts_file)
 }
 
-
 #' Retrieve the list of addresses in use for looking up top-level domains in use by the context.
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
@@ -157,7 +156,9 @@ gdns_get_root_servers <- function(gctx) {
 #' - `zonemd`
 #'
 #' @note Local hosts files are ignored when using this `getdns` API endpoint
-#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param gctx gdns resolver context created with [gdns_resolver()]. If `NULL` a
+#'        temporary context will be created but is not ideal since there is overhead
+#'        associated with context creation and garbage collection.
 #' @param name an entity to query for
 #' @param rr_type what resource record type do you want to queyr for? See `Details`.
 #' @param include_reporting if `TRUE` include debugging information for queries
@@ -168,8 +169,12 @@ gdns_get_root_servers <- function(gctx) {
 #' @examples
 #' x <- gdns_resolver()
 #' gdns_query(x, "example.com")
-gdns_query <- function(gctx, name, rr_type = "txt", rr_class = 1L,
+gdns_query <- function(gctx = NULL, name, rr_type = "txt", rr_class = 1L,
                        include_reporting = FALSE) {
+
+  if (is.null(gctx)) gctx <- gdns_context()
+
+  stopifnot(is_gctx(gctx))
 
   rr_class <- rr_class[1]
   if (!rr_class %in% c(1, 3, 4, 254, 255)) rr_class <- 1
@@ -186,21 +191,6 @@ gdns_query <- function(gctx, name, rr_type = "txt", rr_class = 1L,
   }
 
 }
-
-list(
-  `1` = "ipv4_address",
-  `2` = "nsdname",
-  `6` = c("expire", "minimum", "mname", "refresh", "retry", "rname", "serial"),
-  `16` = "txt_strings",
-  `28` = "ipv6_address",
-  `43` = c("algorithm", "digest", "digest_type", "key_tag"),
-  `46` = c(
-    "algorithm", "key_tag", "labels", "original_ttl", "signature",
-    "signature_expiration", "signature_inception", "signers_name", "type_covered"
-  ),
-  `47` = c("next_domain_name", "type_bit_maps"),
-  `48` = c("algorithm", "flags", "protocol", "public_key")
-) -> rr_fields
 
 #' Printer for gdns_response objects
 #'
@@ -230,6 +220,20 @@ print.gdns_response <- function(x, ...) {
         "\n", sep=""
       )
     },
+    "2" ={
+      cat(
+        "Answer: ",
+        paste0(ans$rdata$nsdname, collapse=", "),
+        "\n", sep=""
+      )
+    },
+    "15" = {
+      cat(
+        "Answer: \n",
+        paste0(glue::glue_data(ans$rdata, "{preference} {exchange}"), collapse="\n"),
+        "\n", sep=""
+      )
+    },
     "16" = {
       rd <- ans$rdata
       typs <- ans$type
@@ -246,6 +250,13 @@ print.gdns_response <- function(x, ...) {
       cat(
         "Answer: ",
         paste0(unlist(x$just_address_answers$address_data), collapse="\n"),
+        "\n", sep=""
+      )
+    },
+    "257" = {
+      cat(
+        "Answer: \n",
+        paste0(glue::glue_data(ans$rdata, "{flags} {tag} {value}"), collapse="\n"),
         "\n", sep=""
       )
     },

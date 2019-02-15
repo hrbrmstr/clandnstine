@@ -11,6 +11,7 @@
 #' @docType package
 #' @author Bob Rudis (bob@@rud.is)
 #' @keywords internal
+#' @importFrom glue glue_data
 #' @importFrom jsonlite fromJSON
 #' @useDynLib clandnstine, .registration = TRUE
 #' @importFrom Rcpp sourceCpp

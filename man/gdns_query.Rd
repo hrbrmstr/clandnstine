@@ -4,11 +4,13 @@
 \alias{gdns_query}
 \title{Arbitrary DNS queries}
 \usage{
-gdns_query(gctx, name, rr_type = "txt", rr_class = 1L,
+gdns_query(gctx = NULL, name, rr_type = "txt", rr_class = 1L,
   include_reporting = FALSE)
 }
 \arguments{
-\item{gctx}{gdns resolver context created with \code{\link[=gdns_resolver]{gdns_resolver()}}}
+\item{gctx}{gdns resolver context created with \code{\link[=gdns_resolver]{gdns_resolver()}}. If \code{NULL} a
+temporary context will be created but is not ideal since there is overhead
+associated with context creation and garbage collection.}
 
 \item{name}{an entity to query for}
 
