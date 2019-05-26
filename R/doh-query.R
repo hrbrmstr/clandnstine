@@ -27,6 +27,7 @@ doh_post <- function(name, type = "A", server_path = "https://dns.quad9.net/dns-
       `Content-Type` = "application/dns-message",
       `Accept` = "application/dns-message"
     ),
+    .CLANDNSTINE_UA,
     encode = "raw",
     body = q$pack()
   ) -> res

@@ -90,3 +90,11 @@ dlv = 32769
 )
 
 rr_types_rev <- set_names(names(rr_types), as.character(rr_types))
+
+httr::user_agent(
+  sprintf(
+    "clandnstine package v%s: (<%s>)",
+    utils::packageVersion("clandnstine"),
+    utils::packageDescription("clandnstine")$URL
+  )
+) -> .CLANDNSTINE_UA
