@@ -137,6 +137,10 @@ int_gdns_get_root_servers <- function(gctx) {
     .Call(`_clandnstine_int_gdns_get_root_servers`, gctx)
 }
 
+int_dns_wire_to_list <- function(buf) {
+    .Call(`_clandnstine_int_dns_wire_to_list`, buf)
+}
+
 #' Test whether an object is an external pointer
 #'
 #' @param x object to test

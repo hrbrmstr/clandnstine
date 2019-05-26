@@ -4,7 +4,7 @@
 \name{clandnstine}
 \alias{clandnstine}
 \alias{clandnstine-package}
-\title{Perform Secure-by-default 'DNS' Queries}
+\title{Perform Secure-by-Default 'DNS' Queries}
 \description{
 Something something 'DNS. Something something 'TLS'.
 Something something 'getdns API/library'.

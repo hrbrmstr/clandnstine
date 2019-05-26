@@ -1,15 +1,14 @@
 Package: clandnstine
 Type: Package
 Title: Perform Secure-by-default 'DNS' Queries
-Version: 0.1.0
-Date: 2019-01-18
+Version: 0.2.0
+Date: 2019-05-26
 Authors@R: c(
     person("Bob", "Rudis", email = "bob@rud.is", role = c("aut", "cre"), 
            comment = c(ORCID = "0000-0001-5670-2640"))
   )
 Maintainer: Bob Rudis <bob@rud.is>
-Description: Something something 'DNS. Something something 'TLS'. 
-    Something something 'getdns API/library'.
+Description: Perform and process 'DNS over TLS' and 'DNS over HTTPS' queries.
 SystemRequirements: C++11; libgetdns v1.5.1 or higher
 URL: https://gitlab.com/hrbrmstr/clandnstine
 BugReports: https://gitlab.com/hrbrmstr/clandnstine/issues
@@ -24,7 +23,9 @@ Imports:
     jsonlite,
     Rcpp,
     magrittr,
-    glue
+    glue,
+    httr,
+    R6
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 LinkingTo: 

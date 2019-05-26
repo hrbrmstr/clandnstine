@@ -1,4 +1,4 @@
-#' Perform Secure-by-default 'DNS' Queries
+#' Perform Secure-by-Default 'DNS' Queries
 #'
 #' Something something 'DNS. Something something 'TLS'.
 #' Something something 'getdns API/library'.
@@ -11,6 +11,7 @@
 #' @docType package
 #' @author Bob Rudis (bob@@rud.is)
 #' @keywords internal
+#' @import httr R6
 #' @importFrom glue glue_data
 #' @importFrom jsonlite fromJSON
 #' @useDynLib clandnstine, .registration = TRUE

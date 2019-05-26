@@ -11,8 +11,7 @@ Perform Secure-by-default ‘DNS’ Queries
 
 ## Description
 
-Something something ‘DNS. Something something ’TLS’. Something something
-‘getdns API/library’.
+Perform and process ‘DNS over TLS’ and ‘DNS over HTTPS’ queries.
 
 ## NOTE
 
@@ -29,7 +28,7 @@ install.
 
 I’ve gotten this running on macOS and Ubuntu 16.04. For the latter I had
 to ensure `libidn2-0-dev` and `libunbound-dev` were installed then had
-to grab the 1.5.1 tarball (e.g. `aria2c
+to grab the 1.5.1 tarball (e.g. `aria2c
 https://getdnsapi.net/releases/getdns-1-5-1/getdns-1.5.1.tar.gz`),
 extract it and `config`/`make`/`make install` (plus `ldconfig` after).
 
@@ -37,33 +36,33 @@ extract it and `config`/`make`/`make install` (plus `ldconfig` after).
 
 I finally grok the getdns api so the package api is going to change
 wildly and fast. The default mode will be to perform queries using DNS
-over TLS but also supports UDP and TCP transports.
+over TLS but also supports UDP and TCP transports along with support for
+DNS over HTTPS.
 
 ## Why?
 
-Well, for starters, to help research DNS over TLS servers. Plus, for
-fun\!
+Well, for starters, to help research DNS over TLS/DNS over HTTPS
+servers. Plus, for fun\!
 
-If you’re asking “Why DNS over TLS at all?” then “faux” privacy. Why
-“faux”? Well, *something* is handing your query and that something
+If you’re asking “Why DNS over TLS/HTTPS at all?” then “faux” privacy.
+Why “faux”? Well, *something* is handing your query and that something
 knows your IP address and what you looked for. So, you’re relying on the
 good faith, honest nature and technical capability of the destination
 server to not mess with you. I don’t trust Cloudflare or Google and am
 witholding judgement on Quad9 either way (they’ve been doing good things
 and are less “look at how cool we are” than CF is).
 
-Also “faux” in that you’re going to be using a standard port (853) and a
-TLS session for the queries so your internet provider will know you’re
-doing *something* and the current, sorry state of SSL certificates,
-certificate authorities, and authoritarian companies and regimes
-combined means confidentiality and integrity are always kinda in
+Also “faux” in that you’re going to be using (for DoT) a standard port
+(853) and a TLS session for the queries so your internet provider will
+know you’re doing *something* and the current, sorry state of SSL
+certificates, certificate authorities, and authoritarian companies and
+regimes combined means confidentiality and integrity are always kinda in
 question unless done super-well.
 
 ## What’s Different About This vs Regular DNS?
 
 Well, if we lookup the addresses for `yahoo.com` the old-fashioned way
-it’s cleartext UDP on the
-    wire:
+it’s cleartext UDP on the wire:
 
     1   0.000000   10.1.10.57 → 10.1.10.200  DNS 80 Standard query 0x8af8 A yahoo.com OPT
     2   0.003297  10.1.10.200 → 10.1.10.57   DNS 176 Standard query response 0x8af8 A yahoo.com A 72.30.35.10 A 98.138.219.231 A 72.30.35.9 A 98.137.246.7 A 98.138.219.232 A 98.137.246.8 OPT
@@ -76,8 +75,7 @@ server forwards all queries to a custom DNS over TLS server since I
 really don’t trust any of the providers when it comes down to it. So, in
 reality for me, it’s even slower than the below — at least initially).
 
-This is the same query via DNS over
-TLS
+This is the same query via DNS over TLS
 
 ``` 
  1   0.000000   10.1.10.57 → 9.9.9.9      TCP 78 52128 → 853 [SYN] Seq=0 Win=65535 Len=0 MSS=1460 WS=64 TSval=602885491 TSecr=0 SACK_PERM=1 TFO=R
@@ -110,6 +108,13 @@ to work pretty hard to try to figure out what you’re looking for.
 ## What’s Inside The Tin
 
 The following functions are implemented:
+
+### DNS over HTTPS
+
+  - `doh_post`: Make a DoH Request (POST/wireformat)
+  - `doh_servers`: Built-in list of DoH servers.
+
+### DNS over TLS
 
   - `gdns_context`: Create a gdns DNS over TLS context and populate it
     with a resolver for use in resolution functions
@@ -146,7 +151,9 @@ The following functions are implemented:
 ## Installation
 
 ``` r
-devtools::install_git("https://gitlab.com/hrbrmstr/clandnstine.git")
+devtools::install_git("https://git.sr.ht/~hrbrmstr/clandnstine")
+# or 
+devtools::install_gitlab("hrbrmstr/clandnstine.git")
 # or
 devtools::install_github("hrbrmstr/clandnstine")
 ```
@@ -158,7 +165,7 @@ library(clandnstine)
 
 # current version
 packageVersion("clandnstine")
-## [1] '0.1.0'
+## [1] '0.2.0'
 ```
 
 ### Get an address(es) from a name:
@@ -186,7 +193,7 @@ gdns_lib_version()
 ## <gdns v1.5.1 resolver context; resolvers: [1.1.1.1]; timeout: 2,000 ms; lookup transport(s): [udp, tls, tcp]; resolution type: stub>
 
 (gdns_get_address(x, "rud.is"))
-## [1] "2604:a880:800:10::6bc:2001" "104.236.112.222"
+## [1] "2602:ff16:3::4dfb:9ac5" "172.93.49.183"
 
 (gdns_get_address(x, "yahoo.com"))
 ##  [1] "2001:4998:58:1836::10" "2001:4998:58:1836::11" "2001:4998:c:1023::4"   "2001:4998:c:1023::5"  
@@ -204,32 +211,48 @@ str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
 ## List of 5
 ##  $ answer_type   : int 800
 ##  $ canonical_name: chr "lenovo.com."
-##  $ replies_full  : int [1, 1:600] 165 144 129 128 0 1 0 8 0 0 ...
+##  $ replies_full  : int [1, 1:762] 34 114 129 128 0 1 0 10 0 0 ...
 ##  $ replies_tree  :'data.frame':  1 obs. of  7 variables:
 ##  $ status        : int 900
 ##  - attr(*, "class")= chr [1:2] "gdns_response" "list"
 
 sort(unlist(leno$replies_tree$answer[[1]]$rdata$txt_strings))
-## [1] "a82c74b37aa84e7c8580f0e32f4d795d"                                                        
-## [2] "ece42d7743c84d6889abda7011fe6f53"                                                        
-## [3] "facebook-domain-verification=1r2am7c2bhzrxpqyt0mda0djoquqsi"                             
-## [4] "google-site-verification=VxW_e6r_Ka7A518qfX2MmIMHGnkpGbnACsjSxKFCBw0"                    
-## [5] "iHzQJvsKnyGP2Nm2qBgL3fyBJ0CC9z4GkY/flfk4EzLP8lPxWHDDPKqZWm1TkeF5kEIL+NotYOF1wo7JtUDXXw=="
-## [6] "qh7hdmqm4lzs85p704d6wsybgrpsly0j"                                                        
-## [7] "v=spf1 include:spf.messagelabs.com include:_netblocks.eloqua.com ~all"                   
-## [8] "Visit www.lenovo.com/think for information about Lenovo products and services"
+##  [1] "a82c74b37aa84e7c8580f0e32f4d795d"                                                        
+##  [2] "ece42d7743c84d6889abda7011fe6f53"                                                        
+##  [3] "facebook-domain-verification=1r2am7c2bhzrxpqyt0mda0djoquqsi"                             
+##  [4] "google-site-verification=nGgukcp60rC-gFxMOJw1NHH0B4VnSchRrlfWV-He_tE"                    
+##  [5] "google-site-verification=sHIlSlj0U6UnCDkfHp1AolWgVEvDjWvc0TR4KaysD2c"                    
+##  [6] "google-site-verification=VxW_e6r_Ka7A518qfX2MmIMHGnkpGbnACsjSxKFCBw0"                    
+##  [7] "iHzQJvsKnyGP2Nm2qBgL3fyBJ0CC9z4GkY/flfk4EzLP8lPxWHDDPKqZWm1TkeF5kEIL+NotYOF1wo7JtUDXXw=="
+##  [8] "qh7hdmqm4lzs85p704d6wsybgrpsly0j"                                                        
+##  [9] "v=spf1 include:spf.messagelabs.com include:_netblocks.eloqua.com ~all"                   
+## [10] "Visit www.lenovo.com/think for information about Lenovo products and services"
 ```
 
-Yep. Advertising even in DNS `TXT` records (see item number
-8).
+Yep. Advertising even in DNS `TXT` records (see item number 8).
+
+### DOH
+
+``` r
+str(doh_post("rud.is")$answer)
+## 'data.frame':    1 obs. of  5 variables:
+##  $ class: int 1
+##  $ name : chr "rud.is."
+##  $ rdata:'data.frame':   1 obs. of  2 variables:
+##   ..$ ipv4_address: chr "172.93.49.183"
+##   ..$ rdata_raw   :List of 1
+##   .. ..$ : int  172 93 49 183
+##  $ ttl  : int 3600
+##  $ type : int 1
+```
 
 ## clandnstine Metrics
 
 | Lang | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
 | :--- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
-| C++  |        3 | 0.21 | 608 | 0.65 |         196 | 0.62 |      138 | 0.27 |
-| R    |       10 | 0.71 | 306 | 0.33 |          68 | 0.22 |      280 | 0.54 |
-| Rmd  |        1 | 0.07 |  19 | 0.02 |          51 | 0.16 |       97 | 0.19 |
+| C++  |        4 | 0.17 | 681 | 0.51 |         220 | 0.49 |      163 | 0.26 |
+| R    |       19 | 0.79 | 635 | 0.47 |         170 | 0.38 |      355 | 0.57 |
+| Rmd  |        1 | 0.04 |  21 | 0.02 |          56 | 0.13 |      105 | 0.17 |
 
 ## Code of Conduct
 

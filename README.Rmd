@@ -18,7 +18,7 @@ Perform Secure-by-default 'DNS' Queries
 
 ## Description
 
-Something something 'DNS. Something something 'TLS'.  Something something 'getdns API/library'.
+Perform and process 'DNS over TLS' and 'DNS over HTTPS' queries.
 
 ## NOTE
 
@@ -35,15 +35,15 @@ I've gotten this running on macOS and Ubuntu 16.04. For the latter I had to ensu
 
 ## TODO/WAT
 
-I finally grok the getdns api so the package api is going to change wildly and fast. The default mode will be to perform queries using DNS over TLS but also supports UDP and TCP transports.
+I finally grok the getdns api so the package api is going to change wildly and fast. The default mode will be to perform queries using DNS over TLS but also supports UDP and TCP transports along with support for DNS over HTTPS.
 
 ## Why?
 
-Well, for starters, to help research DNS over TLS servers. Plus, for fun!
+Well, for starters, to help research DNS over TLS/DNS over HTTPS servers. Plus, for fun!
 
-If you're asking "Why DNS over TLS at all?" then "faux" privacy. Why "faux"? Well, _something_ is handing your query and that something knows your IP address and what you looked for. So, you're relying on the good faith, honest nature and technical capability of the destination server to not mess with you. I don't trust Cloudflare or Google and am witholding judgement on Quad9 either way (they've been doing good things and are less "look at how cool we are" than CF is).
+If you're asking "Why DNS over TLS/HTTPS at all?" then "faux" privacy. Why "faux"? Well, _something_ is handing your query and that something knows your IP address and what you looked for. So, you're relying on the good faith, honest nature and technical capability of the destination server to not mess with you. I don't trust Cloudflare or Google and am witholding judgement on Quad9 either way (they've been doing good things and are less "look at how cool we are" than CF is).
 
-Also "faux" in that you're going to be using a standard port (853) and a TLS session for the queries so your internet provider will know you're doing _something_ and the current, sorry state of SSL certificates, certificate authorities, and authoritarian companies and regimes combined means confidentiality and integrity are always kinda in question unless done super-well.
+Also "faux" in that you're going to be using (for DoT) a standard port (853) and a TLS session for the queries so your internet provider will know you're doing _something_ and the current, sorry state of SSL certificates, certificate authorities, and authoritarian companies and regimes combined means confidentiality and integrity are always kinda in question unless done super-well.
 
 ## What's Different About This vs Regular DNS?
 
@@ -85,6 +85,13 @@ It's stupid slow, consumes more CPU and bandwidth but forces adversaries to work
 
 The following functions are implemented:
 
+### DNS over HTTPS
+
+- `doh_post`: Make a DoH Request (POST/wireformat)
+- `doh_servers`: Built-in list of DoH servers.
+
+### DNS over TLS
+
 - `gdns_context`:  Create a gdns DNS over TLS context and populate it with a resolver for use in resolution functions
 - `gdns_get_address`:  Resolve a host to an addrss
 - `gdns_get_resolution_type`:	Get the current resolution type setting
@@ -106,7 +113,9 @@ The following functions are implemented:
 ## Installation
 
 ```{r install-ex, eval=FALSE}
-devtools::install_git("https://gitlab.com/hrbrmstr/clandnstine.git")
+devtools::install_git("https://git.sr.ht/~hrbrmstr/clandnstine")
+# or 
+devtools::install_gitlab("hrbrmstr/clandnstine.git")
 # or
 devtools::install_github("hrbrmstr/clandnstine")
 ```
@@ -154,6 +163,12 @@ sort(unlist(leno$replies_tree$answer[[1]]$rdata$txt_strings))
 ```
 
 Yep. Advertising even in DNS `TXT` records (see item number 8).
+
+### DOH
+
+```{r doh}
+str(doh_post("rud.is")$answer)
+```
 
 ## clandnstine Metrics
 
