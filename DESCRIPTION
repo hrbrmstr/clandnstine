@@ -1,7 +1,7 @@
 Package: clandnstine
 Type: Package
 Title: Perform Secure-by-default 'DNS' Queries
-Version: 0.2.0
+Version: 0.2.1
 Date: 2019-05-26
 Authors@R: c(
     person("Bob", "Rudis", email = "bob@rud.is", role = c("aut", "cre"), 

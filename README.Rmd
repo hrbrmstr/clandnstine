@@ -85,13 +85,19 @@ It's stupid slow, consumes more CPU and bandwidth but forces adversaries to work
 
 The following functions are implemented:
 
+### Utility
+
+- `to_inaddr_arpa`:	Convert a vector of IPv4 addresses to in-addr.arpa format
+
 ### DNS over HTTPS
 
-- `doh_post`: Make a DoH Request (POST/wireformat)
-- `doh_servers`: Built-in list of DoH servers.
+- `doh_post`:	Make a DoH Request (POST/wireformat)
+- `doh_servers`:	Built-in list of DoH servers.
+- `tidy.gdns_doh_response`:	Tidy a DoH POST response
 
 ### DNS over TLS
 
+- `gdns_query`:  Arbitrary DNS queries
 - `gdns_context`:  Create a gdns DNS over TLS context and populate it with a resolver for use in resolution functions
 - `gdns_get_address`:  Resolve a host to an addrss
 - `gdns_get_resolution_type`:	Get the current resolution type setting
@@ -100,7 +106,6 @@ The following functions are implemented:
 - `gdns_get_tls_ca_path`:	Retreive the value with which the context's upstream recursive servers and suffixes were initialized
 - `gdns_get_transports`:	Retreive what transports are used for DNS lookups.
 - `gdns_lib_version`:  Return gdns library version
-- `gdns_query`:  Arbitrary DNS queries
 - `gdns_set_hosts`:  Initialized the context's local names namespace with values from the given hosts file.
 - `gdns_set_resolution_type`:	Specify whether DNS queries are performed with recursive lookups or as a stub resolver
 - `gdns_set_round_robin_upstreams`:  Set/unset context to round robin queries over the available upstreams when resolving with the stub resolution type.
@@ -168,6 +173,32 @@ Yep. Advertising even in DNS `TXT` records (see item number 8).
 
 ```{r doh}
 str(doh_post("rud.is")$answer)
+```
+
+```{r doh2}
+a <- doh_post("apple.com", "A")
+tidy(a)
+
+aaaa <- doh_post("rud.is", "AAAA")
+tidy(aaaa)
+
+mx <- doh_post("rud.is", "MX")
+tidy(mx)
+
+txt <- doh_post("lenovo.com", "TXT")
+tidy(txt)
+
+cname <- doh_post("dataassurance.pwc.com", "CNAME")
+tidy(cname)
+
+ns <- doh_post("rud.is", "NS")
+tidy(ns)
+
+soa <- doh_post("rud.is", "SOA")
+tidy(soa)
+
+ptr <- doh_post(to_inaddr_arpa("104.244.13.104"), "PTR")
+tidy(ptr)
 ```
 
 ## clandnstine Metrics

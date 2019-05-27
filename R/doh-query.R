@@ -38,10 +38,61 @@ doh_post <- function(name, type = "A", server_path = "https://dns.quad9.net/dns-
 
   if (length(res)) {
     out <- jsonlite::fromJSON(res)
-    # class(out) <- c("gdns_response", "list")
+    class(out) <- c("gdns_doh_response", "list")
     out
   } else {
     NULL
   }
 
 }
+
+#' Tidy generic
+#'
+#' @keywords internal
+#' @export
+#' @param x an object
+#' @param ... unused
+tidy <- function (x, ...) {
+  UseMethod("tidy")
+}
+
+#' Tidy a DoH POST response
+#'
+#' @param x a DoH POST response
+#' @param ... unused
+#' @export
+tidy.gdns_doh_response <- function(x, ...) {
+
+  rawdat <- x$answer[, c("rdata")]
+
+  nr <- colnames(rawdat)
+  if ("txt_strings" %in% nr) {
+    vapply(rawdat[["txt_strings"]], function(.x) {
+      .x
+    }, FUN.VALUE = character(1)) -> rawdat[["txt_strings"]]
+  }
+
+  lapply(rawdat[["rdata_raw"]], function(.x) {
+
+    if (x$question$qtype %in% c(2, 5, 12)) {
+      charToRaw(.x)
+    } else {
+      as.raw(.x)
+    }
+
+  }) -> rawdat[["rdata_raw"]]
+
+  cbind.data.frame(
+    x$answer[, c("name", "class", "type", "ttl")],
+    rawdat,
+    stringsAsFactors = FALSE
+  ) -> out
+
+  class(out) <- c("tbl_df", "tbl", "data.frame")
+
+  out
+
+}
+
+
+

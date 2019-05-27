@@ -109,13 +109,20 @@ to work pretty hard to try to figure out what you’re looking for.
 
 The following functions are implemented:
 
+### Utility
+
+  - `to_inaddr_arpa`: Convert a vector of IPv4 addresses to in-addr.arpa
+    format
+
 ### DNS over HTTPS
 
   - `doh_post`: Make a DoH Request (POST/wireformat)
   - `doh_servers`: Built-in list of DoH servers.
+  - `tidy.gdns_doh_response`: Tidy a DoH POST response
 
 ### DNS over TLS
 
+  - `gdns_query`: Arbitrary DNS queries
   - `gdns_context`: Create a gdns DNS over TLS context and populate it
     with a resolver for use in resolution functions
   - `gdns_get_address`: Resolve a host to an addrss
@@ -129,7 +136,6 @@ The following functions are implemented:
   - `gdns_get_transports`: Retreive what transports are used for DNS
     lookups.
   - `gdns_lib_version`: Return gdns library version
-  - `gdns_query`: Arbitrary DNS queries
   - `gdns_set_hosts`: Initialized the context’s local names namespace
     with values from the given hosts file.
   - `gdns_set_resolution_type`: Specify whether DNS queries are
@@ -196,9 +202,9 @@ gdns_lib_version()
 ## [1] "2602:ff16:3::4dfb:9ac5" "172.93.49.183"
 
 (gdns_get_address(x, "yahoo.com"))
-##  [1] "2001:4998:58:1836::10" "2001:4998:58:1836::11" "2001:4998:c:1023::4"   "2001:4998:c:1023::5"  
-##  [5] "2001:4998:44:41d::3"   "2001:4998:44:41d::4"   "72.30.35.9"            "72.30.35.10"          
-##  [9] "98.137.246.7"          "98.137.246.8"          "98.138.219.231"        "98.138.219.232"
+##  [1] "2001:4998:44:41d::4"   "2001:4998:58:1836::10" "2001:4998:58:1836::11" "2001:4998:c:1023::4"  
+##  [5] "2001:4998:c:1023::5"   "2001:4998:44:41d::3"   "98.138.219.231"        "98.138.219.232"       
+##  [9] "72.30.35.9"            "72.30.35.10"           "98.137.246.7"          "98.137.246.8"
 
 (gdns_get_address(x, "yahoo.commmm"))
 ## character(0)
@@ -211,7 +217,7 @@ str(leno <- gdns_query(x, "lenovo.com", "txt"), 1)
 ## List of 5
 ##  $ answer_type   : int 800
 ##  $ canonical_name: chr "lenovo.com."
-##  $ replies_full  : int [1, 1:762] 34 114 129 128 0 1 0 10 0 0 ...
+##  $ replies_full  : int [1, 1:762] 81 128 129 128 0 1 0 10 0 0 ...
 ##  $ replies_tree  :'data.frame':  1 obs. of  7 variables:
 ##  $ status        : int 900
 ##  - attr(*, "class")= chr [1:2] "gdns_response" "list"
@@ -242,17 +248,110 @@ str(doh_post("rud.is")$answer)
 ##   ..$ ipv4_address: chr "172.93.49.183"
 ##   ..$ rdata_raw   :List of 1
 ##   .. ..$ : int  172 93 49 183
-##  $ ttl  : int 3600
+##  $ ttl  : int 685
 ##  $ type : int 1
+```
+
+``` r
+a <- doh_post("apple.com", "A")
+tidy(a)
+##         name class type ttl  ipv4_address      rdata_raw
+## 1 apple.com.     1    1 738 17.142.160.59 11, 8e, a0, 3b
+## 2 apple.com.     1    1 738  17.178.96.59 11, b2, 60, 3b
+## 3 apple.com.     1    1 738 17.172.224.47 11, ac, e0, 2f
+
+aaaa <- doh_post("rud.is", "AAAA")
+tidy(aaaa)
+##      name class type   ttl           ipv6_address                                                      rdata_raw
+## 1 rud.is.     1   28 43200 2602:ff16:3::4dfb:9ac5 26, 02, ff, 16, 00, 03, 00, 00, 00, 00, 00, 00, 4d, fb, 9a, c5
+
+mx <- doh_post("rud.is", "MX")
+tidy(mx)
+##      name class type   ttl                 exchange preference
+## 1 rud.is.     1   15 43200 alt2.aspmx.l.google.com.         30
+## 2 rud.is.     1   15 43200      aspmx.l.google.com.         10
+## 3 rud.is.     1   15 43200   aspmx2.googlemail.com.         40
+## 4 rud.is.     1   15 43200 alt1.aspmx.l.google.com.         20
+##                                                                                                    rdata_raw
+## 1 00, 1e, 04, 61, 6c, 74, 32, 05, 61, 73, 70, 6d, 78, 01, 6c, 06, 67, 6f, 6f, 67, 6c, 65, 03, 63, 6f, 6d, 00
+## 2                     00, 0a, 05, 61, 73, 70, 6d, 78, 01, 6c, 06, 67, 6f, 6f, 67, 6c, 65, 03, 63, 6f, 6d, 00
+## 3         00, 28, 06, 61, 73, 70, 6d, 78, 32, 0a, 67, 6f, 6f, 67, 6c, 65, 6d, 61, 69, 6c, 03, 63, 6f, 6d, 00
+## 4 00, 14, 04, 61, 6c, 74, 31, 05, 61, 73, 70, 6d, 78, 01, 6c, 06, 67, 6f, 6f, 67, 6c, 65, 03, 63, 6f, 6d, 00
+
+txt <- doh_post("lenovo.com", "TXT")
+tidy(txt)
+##           name class type  ttl
+## 1  lenovo.com.     1   16 4990
+## 2  lenovo.com.     1   16 4990
+## 3  lenovo.com.     1   16 4990
+## 4  lenovo.com.     1   16 4990
+## 5  lenovo.com.     1   16 4990
+## 6  lenovo.com.     1   16 4990
+## 7  lenovo.com.     1   16 4990
+## 8  lenovo.com.     1   16 4990
+## 9  lenovo.com.     1   16 4990
+## 10 lenovo.com.     1   16 4990
+##                                                                                                                                                                                                                                                                                                                                                             rdata_raw
+## 1                                                                                  44, 67, 6f, 6f, 67, 6c, 65, 2d, 73, 69, 74, 65, 2d, 76, 65, 72, 69, 66, 69, 63, 61, 74, 69, 6f, 6e, 3d, 73, 48, 49, 6c, 53, 6c, 6a, 30, 55, 36, 55, 6e, 43, 44, 6b, 66, 48, 70, 31, 41, 6f, 6c, 57, 67, 56, 45, 76, 44, 6a, 57, 76, 63, 30, 54, 52, 34, 4b, 61, 79, 73, 44, 32, 63
+## 2                                                                                  44, 67, 6f, 6f, 67, 6c, 65, 2d, 73, 69, 74, 65, 2d, 76, 65, 72, 69, 66, 69, 63, 61, 74, 69, 6f, 6e, 3d, 56, 78, 57, 5f, 65, 36, 72, 5f, 4b, 61, 37, 41, 35, 31, 38, 71, 66, 58, 32, 4d, 6d, 49, 4d, 48, 47, 6e, 6b, 70, 47, 62, 6e, 41, 43, 73, 6a, 53, 78, 4b, 46, 43, 42, 77, 30
+## 3                                                                              45, 76, 3d, 73, 70, 66, 31, 20, 69, 6e, 63, 6c, 75, 64, 65, 3a, 73, 70, 66, 2e, 6d, 65, 73, 73, 61, 67, 65, 6c, 61, 62, 73, 2e, 63, 6f, 6d, 20, 69, 6e, 63, 6c, 75, 64, 65, 3a, 5f, 6e, 65, 74, 62, 6c, 6f, 63, 6b, 73, 2e, 65, 6c, 6f, 71, 75, 61, 2e, 63, 6f, 6d, 20, 7e, 61, 6c, 6c
+## 4  58, 69, 48, 7a, 51, 4a, 76, 73, 4b, 6e, 79, 47, 50, 32, 4e, 6d, 32, 71, 42, 67, 4c, 33, 66, 79, 42, 4a, 30, 43, 43, 39, 7a, 34, 47, 6b, 59, 2f, 66, 6c, 66, 6b, 34, 45, 7a, 4c, 50, 38, 6c, 50, 78, 57, 48, 44, 44, 50, 4b, 71, 5a, 57, 6d, 31, 54, 6b, 65, 46, 35, 6b, 45, 49, 4c, 2b, 4e, 6f, 74, 59, 4f, 46, 31, 77, 6f, 37, 4a, 74, 55, 44, 58, 58, 77, 3d, 3d
+## 5                                                                                                                                                                                                                                  20, 71, 68, 37, 68, 64, 6d, 71, 6d, 34, 6c, 7a, 73, 38, 35, 70, 37, 30, 34, 64, 36, 77, 73, 79, 62, 67, 72, 70, 73, 6c, 79, 30, 6a
+## 6                                                                                                                                                                                                                                  20, 65, 63, 65, 34, 32, 64, 37, 37, 34, 33, 63, 38, 34, 64, 36, 38, 38, 39, 61, 62, 64, 61, 37, 30, 31, 31, 66, 65, 36, 66, 35, 33
+## 7                                              4d, 56, 69, 73, 69, 74, 20, 77, 77, 77, 2e, 6c, 65, 6e, 6f, 76, 6f, 2e, 63, 6f, 6d, 2f, 74, 68, 69, 6e, 6b, 20, 66, 6f, 72, 20, 69, 6e, 66, 6f, 72, 6d, 61, 74, 69, 6f, 6e, 20, 61, 62, 6f, 75, 74, 20, 4c, 65, 6e, 6f, 76, 6f, 20, 70, 72, 6f, 64, 75, 63, 74, 73, 20, 61, 6e, 64, 20, 73, 65, 72, 76, 69, 63, 65, 73
+## 8                                                                                  44, 67, 6f, 6f, 67, 6c, 65, 2d, 73, 69, 74, 65, 2d, 76, 65, 72, 69, 66, 69, 63, 61, 74, 69, 6f, 6e, 3d, 6e, 47, 67, 75, 6b, 63, 70, 36, 30, 72, 43, 2d, 67, 46, 78, 4d, 4f, 4a, 77, 31, 4e, 48, 48, 30, 42, 34, 56, 6e, 53, 63, 68, 52, 72, 6c, 66, 57, 56, 2d, 48, 65, 5f, 74, 45
+## 9                                                                                                                      3b, 66, 61, 63, 65, 62, 6f, 6f, 6b, 2d, 64, 6f, 6d, 61, 69, 6e, 2d, 76, 65, 72, 69, 66, 69, 63, 61, 74, 69, 6f, 6e, 3d, 31, 72, 32, 61, 6d, 37, 63, 32, 62, 68, 7a, 72, 78, 70, 71, 79, 74, 30, 6d, 64, 61, 30, 64, 6a, 6f, 71, 75, 71, 73, 69
+## 10                                                                                                                                                                                                                                 20, 61, 38, 32, 63, 37, 34, 62, 33, 37, 61, 61, 38, 34, 65, 37, 63, 38, 35, 38, 30, 66, 30, 65, 33, 32, 66, 34, 64, 37, 39, 35, 64
+##                                                                                 txt_strings
+## 1                      google-site-verification=sHIlSlj0U6UnCDkfHp1AolWgVEvDjWvc0TR4KaysD2c
+## 2                      google-site-verification=VxW_e6r_Ka7A518qfX2MmIMHGnkpGbnACsjSxKFCBw0
+## 3                     v=spf1 include:spf.messagelabs.com include:_netblocks.eloqua.com ~all
+## 4  iHzQJvsKnyGP2Nm2qBgL3fyBJ0CC9z4GkY/flfk4EzLP8lPxWHDDPKqZWm1TkeF5kEIL+NotYOF1wo7JtUDXXw==
+## 5                                                          qh7hdmqm4lzs85p704d6wsybgrpsly0j
+## 6                                                          ece42d7743c84d6889abda7011fe6f53
+## 7             Visit www.lenovo.com/think for information about Lenovo products and services
+## 8                      google-site-verification=nGgukcp60rC-gFxMOJw1NHH0B4VnSchRrlfWV-He_tE
+## 9                               facebook-domain-verification=1r2am7c2bhzrxpqyt0mda0djoquqsi
+## 10                                                         a82c74b37aa84e7c8580f0e32f4d795d
+
+cname <- doh_post("dataassurance.pwc.com", "CNAME")
+tidy(cname)
+##                     name class type  ttl                   cname
+## 1 dataassurance.pwc.com.     1    5 1346 f6759d2.x.incapdns.net.
+##                                                                                    rdata_raw
+## 1 66, 36, 37, 35, 39, 64, 32, 2e, 78, 2e, 69, 6e, 63, 61, 70, 64, 6e, 73, 2e, 6e, 65, 74, 2e
+
+ns <- doh_post("rud.is", "NS")
+tidy(ns)
+##      name class type   ttl          nsdname                                                      rdata_raw
+## 1 rud.is.     1    2 43200  dns.mwebdns.eu.     64, 6e, 73, 2e, 6d, 77, 65, 62, 64, 6e, 73, 2e, 65, 75, 2e
+## 2 rud.is.     1    2 43200  dns.mwebdns.de.     64, 6e, 73, 2e, 6d, 77, 65, 62, 64, 6e, 73, 2e, 64, 65, 2e
+## 3 rud.is.     1    2 43200 dns.mwebdns.net. 64, 6e, 73, 2e, 6d, 77, 65, 62, 64, 6e, 73, 2e, 6e, 65, 74, 2e
+
+soa <- doh_post("rud.is", "SOA")
+tidy(soa)
+##      name class type   ttl expire minimum           mname
+## 1 rud.is.     1    6 43200 604800   86400 dns.mwebdns.de.
+##                                                                                                                                                                                                                                                rdata_raw
+## 1 03, 64, 6e, 73, 07, 6d, 77, 65, 62, 64, 6e, 73, 02, 64, 65, 00, 0a, 68, 6f, 73, 74, 6d, 61, 73, 74, 65, 72, 0a, 6d, 61, 6e, 64, 6f, 72, 61, 77, 65, 62, 02, 64, 65, 00, 77, ce, 5b, f3, 00, 00, 2a, 30, 00, 00, 0e, 10, 00, 09, 3a, 80, 00, 01, 51, 80
+##   refresh retry                     rname     serial
+## 1   10800  3600 hostmaster.mandoraweb.de. 2010012659
+
+ptr <- doh_post(to_inaddr_arpa("104.244.13.104"), "PTR")
+tidy(ptr)
+##                           name class type   ttl                      ptrdname
+## 1 104.13.244.104.in-addr.arpa.     1   12 43200 archive.farsightsecurity.com.
+##                                                                                                            rdata_raw
+## 1 61, 72, 63, 68, 69, 76, 65, 2e, 66, 61, 72, 73, 69, 67, 68, 74, 73, 65, 63, 75, 72, 69, 74, 79, 2e, 63, 6f, 6d, 2e
 ```
 
 ## clandnstine Metrics
 
 | Lang | \# Files |  (%) | LoC |  (%) | Blank lines |  (%) | \# Lines |  (%) |
 | :--- | -------: | ---: | --: | ---: | ----------: | ---: | -------: | ---: |
-| C++  |        4 | 0.17 | 681 | 0.51 |         220 | 0.49 |      163 | 0.26 |
-| R    |       19 | 0.79 | 635 | 0.47 |         170 | 0.38 |      355 | 0.57 |
-| Rmd  |        1 | 0.04 |  21 | 0.02 |          56 | 0.13 |      105 | 0.17 |
+| R    |       20 | 0.80 | 686 | 0.49 |         188 | 0.40 |      370 | 0.58 |
+| C++  |        4 | 0.16 | 681 | 0.49 |         220 | 0.46 |      163 | 0.25 |
+| Rmd  |        1 | 0.04 |  37 | 0.03 |          66 | 0.14 |      110 | 0.17 |
 
 ## Code of Conduct
 
