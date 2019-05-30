@@ -6,6 +6,7 @@
 #' @param resolvers character vector of valid DNS over TLS resolvers;
 #'        Defaults to Quad9 (`9.9.9.9`).
 #' @export
+#' @family query functions
 #' @examples
 #' x <- gdns_context()
 #' x <- gdns_context("1.1.1.1")
@@ -19,10 +20,11 @@ gdns_context <- function(resolvers = "9.9.9.9") {
 #'       maintains a list of DNS over TLS servers.
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param resolvers character vector of valid DNS over TLS resolvers
+#' @family context functions
 #' @export
 #' @examples
 #' x <- gdns_context()
-#' x <- gdns_update_resolvers("1.1.1.1")
+#' x <- gdns_update_resolvers(x, "1.1.1.1")
 gdns_update_resolvers<- function(gctx, resolvers) {
   int_gdns_update_resolvers(gctx, resolvers)
 }
@@ -33,15 +35,27 @@ gdns_update_resolvers<- function(gctx, resolvers) {
 #' @param hosts_file path to a valid `hosts` file (e.g. "`/etc/hosts`). This value
 #'        will be [path.expand()]ed.
 #' @export
+#' @family context functions
 #' @examples
 #' x <- gdns_context()
-#' x <- gdns_set_hosts(x, "/etc/hosts")
+#' gdns_set_hosts(x, "/etc/hosts")
 gdns_set_hosts<- function(gctx, hosts_file) {
   hosts_file <- path.expand(hosts_file[1])
   stopifnot(file.exists(hosts_file))
   int_gdns_set_hosts(gctx, hosts_file)
 }
 
+#' Retrieve the list of addresses in use for looking up top-level domains in use by the context.
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @export
+#' @family context functions
+# x <- gdns_context()
+# gdns_get_root_servers(x)
+gdns_get_root_servers <- function(gctx) {
+  x <- int_gdns_get_root_servers(gctx);
+  if (length(x)) jsonlite::fromJSON(x) else NULL
+}
 
 #' Arbitrary DNS queries
 #'
@@ -142,18 +156,25 @@ gdns_set_hosts<- function(gctx, hosts_file) {
 #' - `zonemd`
 #'
 #' @note Local hosts files are ignored when using this `getdns` API endpoint
-#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @param gctx gdns resolver context created with [gdns_resolver()]. If `NULL` a
+#'        temporary context will be created but is not ideal since there is overhead
+#'        associated with context creation and garbage collection.
 #' @param name an entity to query for
 #' @param rr_type what resource record type do you want to queyr for? See `Details`.
 #' @param include_reporting if `TRUE` include debugging information for queries
 #'        such as the length of time it takes for each query. Default: `FALSE`
 #' @references <https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml>
+#' @family query functions
 #' @export
 #' @examples
 #' x <- gdns_resolver()
 #' gdns_query(x, "example.com")
-gdns_query <- function(gctx, name, rr_type = "txt", rr_class = 1L,
+gdns_query <- function(gctx = NULL, name, rr_type = "txt", rr_class = 1L,
                        include_reporting = FALSE) {
+
+  if (is.null(gctx)) gctx <- gdns_context()
+
+  stopifnot(is_gctx(gctx))
 
   rr_class <- rr_class[1]
   if (!rr_class %in% c(1, 3, 4, 254, 255)) rr_class <- 1
@@ -170,21 +191,6 @@ gdns_query <- function(gctx, name, rr_type = "txt", rr_class = 1L,
   }
 
 }
-
-list(
-  `1` = "ipv4_address",
-  `2` = "nsdname",
-  `6` = c("expire", "minimum", "mname", "refresh", "retry", "rname", "serial"),
-  `16` = "txt_strings",
-  `28` = "ipv6_address",
-  `43` = c("algorithm", "digest", "digest_type", "key_tag"),
-  `46` = c(
-    "algorithm", "key_tag", "labels", "original_ttl", "signature",
-    "signature_expiration", "signature_inception", "signers_name", "type_covered"
-  ),
-  `47` = c("next_domain_name", "type_bit_maps"),
-  `48` = c("algorithm", "flags", "protocol", "public_key")
-) -> rr_fields
 
 #' Printer for gdns_response objects
 #'
@@ -214,6 +220,20 @@ print.gdns_response <- function(x, ...) {
         "\n", sep=""
       )
     },
+    "2" ={
+      cat(
+        "Answer: ",
+        paste0(ans$rdata$nsdname, collapse=", "),
+        "\n", sep=""
+      )
+    },
+    "15" = {
+      cat(
+        "Answer: \n",
+        paste0(glue::glue_data(ans$rdata, "{preference} {exchange}"), collapse="\n"),
+        "\n", sep=""
+      )
+    },
     "16" = {
       rd <- ans$rdata
       typs <- ans$type
@@ -230,6 +250,13 @@ print.gdns_response <- function(x, ...) {
       cat(
         "Answer: ",
         paste0(unlist(x$just_address_answers$address_data), collapse="\n"),
+        "\n", sep=""
+      )
+    },
+    "257" = {
+      cat(
+        "Answer: \n",
+        paste0(glue::glue_data(ans$rdata, "{flags} {tag} {value}"), collapse="\n"),
         "\n", sep=""
       )
     },

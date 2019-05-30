@@ -4,7 +4,7 @@
 \name{clandnstine}
 \alias{clandnstine}
 \alias{clandnstine-package}
-\title{Perform Secure-by-default 'DNS' Queries}
+\title{Perform Secure-by-Default 'DNS' Queries}
 \description{
 Methods are provided to query 'Domain Name System' ('DNS') stub
 and recursive resolvers for all 'DNS' resource record types using 'UDP',

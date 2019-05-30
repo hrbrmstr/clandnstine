@@ -9,3 +9,4 @@ gdns_lib_version()
 \description{
 Return gdns library version
 }
+\concept{utlity functions}

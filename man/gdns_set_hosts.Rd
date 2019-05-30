@@ -17,5 +17,22 @@ Initialized the context's local names namespace with values from the given hosts
 }
 \examples{
 x <- gdns_context()
-x <- gdns_set_hosts(x, "/etc/hosts")
+gdns_set_hosts(x, "/etc/hosts")
 }
+\seealso{
+Other context functions: \code{\link{gdns_get_hosts}},
+  \code{\link{gdns_get_resolution_type}},
+  \code{\link{gdns_get_resolvconf}},
+  \code{\link{gdns_get_root_servers}},
+  \code{\link{gdns_get_timeout}},
+  \code{\link{gdns_get_tls_ca_file}},
+  \code{\link{gdns_get_tls_ca_path}},
+  \code{\link{gdns_get_transports}},
+  \code{\link{gdns_set_resolution_type}},
+  \code{\link{gdns_set_round_robin_upstreams}},
+  \code{\link{gdns_set_timeout}},
+  \code{\link{gdns_set_tls_ca_file}},
+  \code{\link{gdns_set_tls_ca_path}},
+  \code{\link{gdns_update_resolvers}}
+}
+\concept{context functions}

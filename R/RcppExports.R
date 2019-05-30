@@ -3,6 +3,7 @@
 
 #' Return gdns library version
 #'
+#' @family utlity functions
 #' @export
 gdns_lib_version <- function() {
     .Call(`_clandnstine_gdns_lib_version`)
@@ -18,6 +19,7 @@ int_gdns_update_resolvers <- function(gctx, resolvers) {
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param timeout number of milliseconds (integer; i.e. not-fractional)
+#' @family context functions
 #' @export
 gdns_set_timeout <- function(gctx, timeout) {
     .Call(`_clandnstine_gdns_set_timeout`, gctx, timeout)
@@ -26,6 +28,7 @@ gdns_set_timeout <- function(gctx, timeout) {
 #' Retreive the number of milliseconds to wait for request to return
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @family context functions
 #' @export
 gdns_get_timeout <- function(gctx) {
     .Call(`_clandnstine_gdns_get_timeout`, gctx)
@@ -37,6 +40,7 @@ gdns_get_timeout <- function(gctx) {
 #' @md
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param flag if `TRUE` (the default) round robin queries when using more than one stub resolver,
+#' @family context functions
 #' @export
 gdns_set_round_robin_upstreams <- function(gctx, flag = TRUE) {
     .Call(`_clandnstine_gdns_set_round_robin_upstreams`, gctx, flag)
@@ -63,6 +67,7 @@ int_gdns_set_resolution_type <- function(gctx, res_type) {
 #' Retreive what transports are used for DNS lookups.
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @family context functions
 #' @export
 gdns_get_transports <- function(gctx) {
     .Call(`_clandnstine_gdns_get_transports`, gctx)
@@ -71,6 +76,7 @@ gdns_get_transports <- function(gctx) {
 #' Retreive the value of the localnames namespace
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @family context functions
 #' @export
 gdns_get_hosts <- function(gctx) {
     .Call(`_clandnstine_gdns_get_hosts`, gctx)
@@ -79,6 +85,7 @@ gdns_get_hosts <- function(gctx) {
 #' Retreive the value with which the context's upstream recursive servers and suffixes were initialized
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @family context functions
 #' @export
 gdns_get_resolvconf <- function(gctx) {
     .Call(`_clandnstine_gdns_get_resolvconf`, gctx)
@@ -87,6 +94,7 @@ gdns_get_resolvconf <- function(gctx) {
 #' Retreive the value with which the context's upstream recursive servers and suffixes were initialized
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @family context functions
 #' @export
 gdns_get_tls_ca_path <- function(gctx) {
     .Call(`_clandnstine_gdns_get_tls_ca_path`, gctx)
@@ -95,6 +103,7 @@ gdns_get_tls_ca_path <- function(gctx) {
 #' Retreive the file location with CA certificates for verification purposes
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @family context functions
 #' @export
 gdns_get_tls_ca_file <- function(gctx) {
     .Call(`_clandnstine_gdns_get_tls_ca_file`, gctx)
@@ -104,6 +113,7 @@ gdns_get_tls_ca_file <- function(gctx) {
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param ca_path directory with Certificate Authority certificates
+#' @family context functions
 #' @export
 gdns_set_tls_ca_path <- function(gctx, ca_path) {
     .Call(`_clandnstine_gdns_set_tls_ca_path`, gctx, ca_path)
@@ -113,9 +123,22 @@ gdns_set_tls_ca_path <- function(gctx, ca_path) {
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param ca_file file with Certificate Authority certificates
+#' @family context functions
 #' @export
 gdns_set_tls_ca_file <- function(gctx, ca_file) {
     .Call(`_clandnstine_gdns_set_tls_ca_file`, gctx, ca_file)
+}
+
+#' Retrieve the list of addresses in use for looking up top-level domains in use by the context.
+#'
+#' @param gctx gdns resolver context created with [gdns_resolver()]
+#' @keywords internal
+int_gdns_get_root_servers <- function(gctx) {
+    .Call(`_clandnstine_int_gdns_get_root_servers`, gctx)
+}
+
+int_dns_wire_to_list <- function(buf) {
+    .Call(`_clandnstine_int_dns_wire_to_list`, buf)
 }
 
 #' Test whether an object is an external pointer
@@ -144,6 +167,7 @@ int_gdns_context <- function(resolvers) {
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @param host to lookup
+#' @family query functions
 #' @export
 #' @examples
 #' x <- gdns_resolver()
@@ -165,6 +189,7 @@ int_gdns_query <- function(gctx, name, rr, include_reporting = FALSE) {
 #'
 #' @param gctx gdns resolver context created with [gdns_resolver()]
 #' @export
+#' @family context functions
 #' @examples
 #' x <- gdns_context()
 #' gdns_get_resolution_type(x)
