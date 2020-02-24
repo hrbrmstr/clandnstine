@@ -20,7 +20,8 @@ gdns_get_address(x, "yahoo.com")
 x \%>\% gdns_get_address("yahoo.com")
 }
 \seealso{
-Other query functions: \code{\link{gdns_context}},
-  \code{\link{gdns_query}}
+Other query functions: 
+\code{\link{gdns_context}()},
+\code{\link{gdns_query}()}
 }
 \concept{query functions}

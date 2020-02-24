@@ -1,4 +1,4 @@
-#' Perform Secure-by-Default 'DNS' Queries
+#' Perform Secure-by-default or Woefully Insecure 'DNS' Queries
 #'
 #' Methods are provided to query 'Domain Name System' ('DNS') stub
 #' and recursive resolvers for all 'DNS' resource record types using 'UDP',

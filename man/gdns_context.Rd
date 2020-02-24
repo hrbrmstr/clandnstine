@@ -9,7 +9,7 @@ gdns_context(resolvers = "9.9.9.9")
 }
 \arguments{
 \item{resolvers}{character vector of valid DNS over TLS resolvers;
-Defaults to Quad9 (\code{9.9.9.9}).}
+Defaults to Quad9 (\verb{9.9.9.9}).}
 }
 \description{
 Create a gdns DNS over TLS context and populate it with a resolver
@@ -24,7 +24,8 @@ x <- gdns_context()
 x <- gdns_context("1.1.1.1")
 }
 \seealso{
-Other query functions: \code{\link{gdns_get_address}},
-  \code{\link{gdns_query}}
+Other query functions: 
+\code{\link{gdns_get_address}()},
+\code{\link{gdns_query}()}
 }
 \concept{query functions}

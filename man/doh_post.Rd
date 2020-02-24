@@ -4,8 +4,7 @@
 \alias{doh_post}
 \title{Make a DoH Request (POST/wireformat)}
 \usage{
-doh_post(name, type = "A",
-  server_path = "https://dns.quad9.net/dns-query")
+doh_post(name, type = "A", server_path = "https://dns.quad9.net/dns-query")
 }
 \arguments{
 \item{name}{name to query for}

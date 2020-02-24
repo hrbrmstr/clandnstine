@@ -1,19 +1,20 @@
 Package: clandnstine
 Type: Package
-Title: Perform Secure-by-default 'DNS' Queries
-Version: 0.2.1
-Date: 2019-05-26
+Title: Perform Secure-by-default or Woefully Insecure 'DNS' Queries
+Version: 0.3.0
+Date: 2020-02-24
 Authors@R: c(
     person("Bob", "Rudis", email = "bob@rud.is", role = c("aut", "cre"), 
            comment = c(ORCID = "0000-0001-5670-2640"))
   )
 Maintainer: Bob Rudis <bob@rud.is>
-Description: Perform and process 'DNS over TLS' and 'DNS over HTTPS' queries.
+Description: Perform and process DNS over TLS, DNS over HTTPS, or Just Plain DNS queries using 
+   the getdns (<https://getdnsapi.net/>) C library.
 SystemRequirements: C++11; libgetdns v1.5.1 or higher
-URL: https://gitlab.com/hrbrmstr/clandnstine
-BugReports: https://gitlab.com/hrbrmstr/clandnstine/issues
+URL: https://git.rud.is/hrbrmstr/clandnstine
+BugReports: https://git.rud.is/hrbrmstr/clandnstine/issues
 Encoding: UTF-8
-License: AGPL
+License: MIT + file LICENSE
 Suggests:
     testthat,
     covr
@@ -27,6 +28,6 @@ Imports:
     httr,
     R6
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 LinkingTo: 
     Rcpp

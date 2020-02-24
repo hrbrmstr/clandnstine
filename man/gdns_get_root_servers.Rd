@@ -13,19 +13,20 @@ gdns_get_root_servers(gctx)
 Retrieve the list of addresses in use for looking up top-level domains in use by the context.
 }
 \seealso{
-Other context functions: \code{\link{gdns_get_hosts}},
-  \code{\link{gdns_get_resolution_type}},
-  \code{\link{gdns_get_resolvconf}},
-  \code{\link{gdns_get_timeout}},
-  \code{\link{gdns_get_tls_ca_file}},
-  \code{\link{gdns_get_tls_ca_path}},
-  \code{\link{gdns_get_transports}},
-  \code{\link{gdns_set_hosts}},
-  \code{\link{gdns_set_resolution_type}},
-  \code{\link{gdns_set_round_robin_upstreams}},
-  \code{\link{gdns_set_timeout}},
-  \code{\link{gdns_set_tls_ca_file}},
-  \code{\link{gdns_set_tls_ca_path}},
-  \code{\link{gdns_update_resolvers}}
+Other context functions: 
+\code{\link{gdns_get_hosts}()},
+\code{\link{gdns_get_resolution_type}()},
+\code{\link{gdns_get_resolvconf}()},
+\code{\link{gdns_get_timeout}()},
+\code{\link{gdns_get_tls_ca_file}()},
+\code{\link{gdns_get_tls_ca_path}()},
+\code{\link{gdns_get_transports}()},
+\code{\link{gdns_set_hosts}()},
+\code{\link{gdns_set_resolution_type}()},
+\code{\link{gdns_set_round_robin_upstreams}()},
+\code{\link{gdns_set_timeout}()},
+\code{\link{gdns_set_tls_ca_file}()},
+\code{\link{gdns_set_tls_ca_path}()},
+\code{\link{gdns_update_resolvers}()}
 }
 \concept{context functions}

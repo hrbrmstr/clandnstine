@@ -4,8 +4,13 @@
 \alias{gdns_query}
 \title{Arbitrary DNS queries}
 \usage{
-gdns_query(gctx = NULL, name, rr_type = "txt", rr_class = 1L,
-  include_reporting = FALSE)
+gdns_query(
+  gctx = NULL,
+  name,
+  rr_type = "txt",
+  rr_class = 1L,
+  include_reporting = FALSE
+)
 }
 \arguments{
 \item{gctx}{gdns resolver context created with \code{\link[=gdns_resolver]{gdns_resolver()}}. If \code{NULL} a
@@ -24,7 +29,7 @@ Perform any valid resource record inquiry for a given name. See \code{Details}.
 }
 \details{
 This returns a fairly complex result object but that is the nature
-of DNS queries. You're likely going to want what is in \code{$replies_tree$answer}
+of DNS queries. You're likely going to want what is in \verb{$replies_tree$answer}
 but the rest of the structure contains lovely metadata about the query and
 remote query environment. There will eventually be "as data frame"-ish helpers
 for this object.
@@ -130,7 +135,8 @@ gdns_query(x, "example.com")
 \url{https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml}
 }
 \seealso{
-Other query functions: \code{\link{gdns_context}},
-  \code{\link{gdns_get_address}}
+Other query functions: 
+\code{\link{gdns_context}()},
+\code{\link{gdns_get_address}()}
 }
 \concept{query functions}
