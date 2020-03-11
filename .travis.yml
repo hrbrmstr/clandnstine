@@ -4,9 +4,23 @@ cache: packages
 dist: xenial
 
 apt_packages:
-  - libgetdns-dev
+  - cmake
+  - libcurl4-openssl-dev
+  - git
+  - check
   - libidn2-0-dev
   - libunbound-dev
+
+before_install:
+  - git clone https://github.com/getdnsapi/getdns.git
+  - cd getdns
+  - git checkout develop
+  - git submodule update --init
+  - mkdir build
+  - cd build
+  - cmake -DENABLE_STATIC=true -DBUILD_GETDNS_QUERY=true -DBUILD_GETDNS_SERVER_MON=flse -DUSE_GNUTLS=false -DUSE_LIBIDN2=true -DUSE_LIBEV=false -DUSE_LIBEVENT2=false -DUSE_LIBUV=false -DBUILD_STUBBY=false -DENABLE_UNBOUND_EVENT_API=false -DBUILD_DOXYGEN=false ..
+  - make
+  - make install
 
 addons:
   apt:

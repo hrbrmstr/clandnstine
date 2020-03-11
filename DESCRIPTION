@@ -1,8 +1,8 @@
 Package: clandnstine
 Type: Package
 Title: Perform Secure-by-default or Woefully Insecure 'DNS' Queries
-Version: 0.3.0
-Date: 2020-02-24
+Version: 0.3.1
+Date: 2020-03-11
 Authors@R: c(
     person("Bob", "Rudis", email = "bob@rud.is", role = c("aut", "cre"), 
            comment = c(ORCID = "0000-0001-5670-2640"))
